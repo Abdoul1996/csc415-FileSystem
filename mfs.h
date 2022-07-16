@@ -86,5 +86,22 @@ struct fs_stat
 
 int fs_stat(const char *path, struct fs_stat *buf);
 
+typedef struct VCB{
+	int rootBlockNum;
+	int blockNumber;
+	int blockSize;
+	int freeSpace;
+	long sig;		// "Magic Numbers"
+} VCB;
+
+typedef struct directoryEntry{
+	char name[20];
+	int size;
+	int location;
+	time_t time;
+} directoryEntry;
+
+VCB *vcbPoint;
+
 #endif
 

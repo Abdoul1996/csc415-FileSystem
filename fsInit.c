@@ -1,9 +1,9 @@
 /**************************************************************
 * Class:  CSC-415-0# Fall 2021
-* Names: 
-* Student IDs:
-* GitHub Name:
-* Group Name:
+* Names: Abdoulfatah Abdillahi, Brandon Butler, Jacob Cross, Kevin Manago
+* Student IDs: 921623492, 920819091, 916168167, 917784912
+* GitHub Name: Abdoul1996, BrandonButler08, JacobCross, Kmanago95
+* Group Name: Team Shield
 * Project: Basic File System
 *
 * File: fsInit.c
@@ -29,6 +29,12 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	{
 	printf ("Initializing File System with %ld blocks with a block size of %ld\n", numberOfBlocks, blockSize);
 	/* TODO: Add any code you need to initialize your file system. */
+
+	// Mallock a block of memory as VCB pointer (MS1)
+	vcbPoint = malloc(blockSize);
+
+	// LBAread block 0 (MS1)
+	LBAread(vcbPoint, 1, 0);
 
 	return 0;
 	}
