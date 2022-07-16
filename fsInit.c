@@ -36,6 +36,14 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	// LBAread block 0 (MS1)
 	LBAread(vcbPoint, 1, 0);
 
+	// "Magic Number" check (MS1)
+	vcbPoint->sig = 0x414142424A434B4D;
+	printf("%ld\n", vcbPoint->sig);
+
+	if(vcbPoint->sig == 1){
+		
+	}
+
 	return 0;
 	}
 	
@@ -43,4 +51,6 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 void exitFileSystem ()
 	{
 	printf ("System exiting\n");
+	free(vcbPoint);
+	vcbPoint = NULL;
 	}
