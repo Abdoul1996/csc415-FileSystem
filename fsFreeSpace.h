@@ -6,9 +6,9 @@
 * Group Name: Team Shield
 * Project: Basic File System
 *
-* File: fsFAT.h
+* File: fsFreeSpace.h
 *
-* Description: FAT file system header
+* Description: bitmap file system header
 *
 *
 **************************************************************/
