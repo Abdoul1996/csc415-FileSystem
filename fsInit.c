@@ -34,40 +34,43 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	printf ("Initializing File System with %ld blocks with a block size of %ld\n", numberOfBlocks, blockSize);
 	/* TODO: Add any code you need to initialize your file system. */
 
-	// Malloc a block of memory as VCB pointer (MS1)
-	VCBPtr = malloc(blockSize);
-
-
-	// LBAread block 0 (MS1)
-	LBAread(VCBPtr, 1, 0);
+	VCBPtr = malloc(blockSize);	// malloc block of memory
+	LBAread(VCBPtr, 1, 0);		// grab VCBPtr to check if initialized correctly	
 	
-	// "Magic Number" check (MS1)
-	if((VCBPtr->sig == SIGNATURE))
+	if((VCBPtr->sig == SIGNATURE))	// if signature is correct, return 0
 		return 0;	
+
+	// initializing Volume control block info if signature doesnt match
+	// signature doesn't match = not initialized
 	VCBPtr->sig = SIGNATURE;
 	VCBPtr->blockNumber = numberOfBlocks;
 	VCBPtr->blockSize = blockSize;
 	VCBPtr->freeSpace = initFreeSpace(); 	
-	initRootDirectory(VCBPtr); // sets rootBlocknumber
-	LBAwrite(VCBPtr, 1, 0);	
+	initRootDirectory(VCBPtr);	// init function sets the rootBlockNumber
+	LBAwrite(VCBPtr, 1, 0);		// write data to hard disk / memory
 		
-	return 0;
+	return 0; 			// return value unsure on 0
 	}
 
 void initRootDirectory(VCB* VCBPtr){
-	// Decide how many DEs I want
-	// 50 for now I guess
-	// size of struct DE is 40, 40*50 is 2000, 2000/512 = 3.9 = 4, 4*512 = 2048
-	// 51*40 = 2040 -> 51 entries	
-	for(int i = 0; i < NUM_ENTRIES ; i++){
-		entries[i] = NULL;	
-	}
+	// Deciding on 50 Directory Entries for now (based on MS1 steps)
+	// DE Struct size is 40
+	// Math works out to 4 blocks, 51 Directory Entries
+	// 50 * 40 = 2000, 512 / 2000 = 3.9 -> approx. 4
+	// 4 * 512 = 2048
+	// 51*40 = 2040 -> 51 DEs
 
-	//TODO: ask free space system for 4 blocks, returns starting block
+	for(int i = 0; i < NUM_ENTRIES ; i++){
+		entries[i] = NULL; // Null is free state	
+	}
+	
+	// Asking for starting block of allocated space from freespace.c
 	int startingBlock = freeSpaceRequest(DIR_ENTRY_BLOCKS);
-	time_t rawTime;
-	entries[0] = malloc(sizeof(directoryEntry));
-	strcpy(entries[0]->name, ".");
+	time_t rawTime;					// rawtime for time part of entry
+	entries[0] = malloc(sizeof(directoryEntry));	// malloc space for entries
+	
+	// Initializing member variables of the struct for "." and ".." -> root directories
+	strcpy(entries[0]->name, ".");	
 	entries[0]->size = ENTRY_MEMORY;
 	entries[0]->location = startingBlock;
 	entries[0]->time = time( &rawTime );
@@ -78,13 +81,13 @@ void initRootDirectory(VCB* VCBPtr){
 	entries[1]->location = startingBlock;
 	entries[1]->time = time( &rawTime );
 
-	VCBPtr->rootBlockNum = startingBlock;
+	VCBPtr->rootBlockNum = startingBlock; // setting rootBlockNum to beginning or root dir
 }
 
 	
 void exitFileSystem (){
 	printf ("System exiting\n");
-	free(VCBPtr);
+	free(VCBPtr); 
 	VCBPtr = NULL;
 	for(int i = 0; i < NUM_ENTRIES; i++){
 		if(entries[i] != NULL){
