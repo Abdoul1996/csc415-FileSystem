@@ -24,29 +24,35 @@
 #include "fsLow.h"
 #include "mfs.h"
 
+#define SIGNATURE 0x414142424A434B4D
 
 int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	{
 	printf ("Initializing File System with %ld blocks with a block size of %ld\n", numberOfBlocks, blockSize);
 	/* TODO: Add any code you need to initialize your file system. */
 
-	// Mallock a block of memory as VCB pointer (MS1)
-	vcbPoint = malloc(blockSize);
-
+	// Malloc a block of memory as VCB pointer (MS1)
+	VCBPtr = malloc(blockSize);
+	
 	// LBAread block 0 (MS1)
-	LBAread(vcbPoint, 1, 0);
+	LBAread(VCBPtr, 1, 0);
 
 	// "Magic Number" check (MS1)
-	vcbPoint->sig = 0x414142424A434B4D;
-	printf("%ld\n", vcbPoint->sig);
-
-	if(vcbPoint->sig == 1){
-		
-	}
-
+	if((VCBPtr->sig == SIGNATURE))
+		return 0;	
+	VCBPtr->sig = SIGNATURE;
+	VCBPtr->blockNumber = numberOfBlocks;
+	VCBPtr->blockSize = blockSize;
+	// TODO: VCBPtr->freeSpace = 
+	// TODO: VCBPtr->rootBlockNum = 
+	LBAwrite(VCBPtr, 1, 0);	
+	
 	return 0;
 	}
-	
+
+void initRootDirectory(VCB* VCBPtr){
+
+}
 	
 void exitFileSystem ()
 	{

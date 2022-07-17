@@ -101,7 +101,7 @@ typedef struct directoryEntry{
 	time_t time;
 } directoryEntry;
 
-VCB *vcbPoint;
+VCB *VCBPtr;
 
 #endif
 
