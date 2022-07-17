@@ -57,6 +57,6 @@ void initRootDirectory(VCB* VCBPtr){
 void exitFileSystem ()
 	{
 	printf ("System exiting\n");
-	free(vcbPoint);
-	vcbPoint = NULL;
+	free(VCBPtr);
+	VCBPtr = NULL;
 	}
