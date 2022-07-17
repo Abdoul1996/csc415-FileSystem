@@ -25,6 +25,8 @@
 #include "mfs.h"
 #include "fsFreeSpace.c"
 
+#define DEBUG 1 // Allows debugging by skipping VCBPtr->sig == signature check
+
 directoryEntry * entries[NUM_ENTRIES];
 
 void initRootDirectory(VCB* VCBPtr);
@@ -37,9 +39,10 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	VCBPtr = malloc(blockSize);	// malloc block of memory
 	LBAread(VCBPtr, 1, 0);		// grab VCBPtr to check if initialized correctly	
 	
+#if !DEBUG
 	if((VCBPtr->sig == SIGNATURE))	// if signature is correct, return 0
 		return 0;	
-
+#endif
 	// initializing Volume control block info if signature doesnt match
 	// signature doesn't match = not initialized
 	VCBPtr->sig = SIGNATURE;
@@ -74,7 +77,7 @@ void initRootDirectory(VCB* VCBPtr){
 	entries[0]->size = ENTRY_MEMORY;
 	entries[0]->location = startingBlock;
 	entries[0]->time = time( &rawTime );
-
+	printf("address: %llx\n", (unsigned long long int)entries[0]); 
 	entries[1] = malloc(sizeof(directoryEntry));
 	strcpy(entries[1]->name, "..");
 	entries[1]->size = ENTRY_MEMORY;
