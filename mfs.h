@@ -29,7 +29,7 @@
 #define NUM_ENTRIES 51
 #define DIRECTORY_ENTRY_SIZE 40
 #define ENTRY_MEMORY NUM_ENTRIES*DIRECTORY_ENTRY_SIZE
-
+#define DIR_ENTRY_BLOCKS 4
 
 #ifndef uint64_t
 typedef u_int64_t uint64_t;
@@ -105,6 +105,7 @@ typedef struct directoryEntry{
 	int size;
 	int location;
 	time_t time;
+	
 } directoryEntry;
 
 VCB *VCBPtr;

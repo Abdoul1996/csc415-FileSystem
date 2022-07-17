@@ -23,9 +23,9 @@
 #include <math.h>
 #include "fsLow.h"
 #include "mfs.h"
+#include "fsFreeSpace.c"
 
-
-directoryEntry entries[NUM_ENTRIES];
+directoryEntry * entries[NUM_ENTRIES];
 
 void initRootDirectory(VCB* VCBPtr);
 
@@ -36,22 +36,19 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 
 	// Malloc a block of memory as VCB pointer (MS1)
 	VCBPtr = malloc(blockSize);
-	printf("Size of Directory Entry Struct: %ld\n", sizeof(struct directoryEntry));
 
 
 	// LBAread block 0 (MS1)
 	LBAread(VCBPtr, 1, 0);
 	
 	// "Magic Number" check (MS1)
-	//if((VCBPtr->sig == SIGNATURE))
-	//	return 0;	
+	if((VCBPtr->sig == SIGNATURE))
+		return 0;	
 	VCBPtr->sig = SIGNATURE;
 	VCBPtr->blockNumber = numberOfBlocks;
 	VCBPtr->blockSize = blockSize;
-	// TODO: VCBPtr->freeSpace = 
-	// TODO: VCBPtr->rootBlockNum = 
-	
-	initRootDirectory(VCBPtr);
+	VCBPtr->freeSpace = initFreeSpace(); 	
+	initRootDirectory(VCBPtr); // sets rootBlocknumber
 	LBAwrite(VCBPtr, 1, 0);	
 		
 	return 0;
@@ -63,30 +60,37 @@ void initRootDirectory(VCB* VCBPtr){
 	// size of struct DE is 40, 40*50 is 2000, 2000/512 = 3.9 = 4, 4*512 = 2048
 	// 51*40 = 2040 -> 51 entries	
 	for(int i = 0; i < NUM_ENTRIES ; i++){
-		//TODO: initialize each structure to be in a known free state	
+		entries[i] = NULL;	
 	}
 
-	//TODO: ask free space system for 6 blocks, returns starting block
-	int startingBlock;
+	//TODO: ask free space system for 4 blocks, returns starting block
+	int startingBlock = freeSpaceRequest(DIR_ENTRY_BLOCKS);
 	time_t rawTime;
-	
-	strcpy(entries[0].name, ".");
-	entries[0].size = ENTRY_MEMORY;
-	entries[0].location = startingBlock;
-	entries[0].time = time( &rawTime );
+	entries[0] = malloc(sizeof(directoryEntry));
+	strcpy(entries[0]->name, ".");
+	entries[0]->size = ENTRY_MEMORY;
+	entries[0]->location = startingBlock;
+	entries[0]->time = time( &rawTime );
 
-	strcpy(entries[1].name, "..");
-	entries[1].size = ENTRY_MEMORY;
-	entries[1].location = startingBlock;
-	entries[1].time = time( &rawTime );
+	entries[1] = malloc(sizeof(directoryEntry));
+	strcpy(entries[1]->name, "..");
+	entries[1]->size = ENTRY_MEMORY;
+	entries[1]->location = startingBlock;
+	entries[1]->time = time( &rawTime );
 
 	VCBPtr->rootBlockNum = startingBlock;
 }
 
 	
-void exitFileSystem ()
-	{
+void exitFileSystem (){
 	printf ("System exiting\n");
 	free(VCBPtr);
 	VCBPtr = NULL;
+	for(int i = 0; i < NUM_ENTRIES; i++){
+		if(entries[i] != NULL){
+			free(entries[i]); // freeing allocated space
+			entries[i] = NULL; // setting null -> known free state
+		}
+
+	}
 	}
