@@ -20,11 +20,14 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <math.h>
 #include "fsLow.h"
 #include "mfs.h"
 
-#define SIGNATURE 0x414142424A434B4D
+
+directoryEntry entries[NUM_ENTRIES];
+
+void initRootDirectory(VCB* VCBPtr);
 
 int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	{
@@ -33,30 +36,57 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 
 	// Malloc a block of memory as VCB pointer (MS1)
 	VCBPtr = malloc(blockSize);
-	
+	printf("Size of Directory Entry Struct: %ld\n", sizeof(struct directoryEntry));
+
+
 	// LBAread block 0 (MS1)
 	LBAread(VCBPtr, 1, 0);
-
+	
 	// "Magic Number" check (MS1)
-	if((VCBPtr->sig == SIGNATURE))
-		return 0;	
+	//if((VCBPtr->sig == SIGNATURE))
+	//	return 0;	
 	VCBPtr->sig = SIGNATURE;
 	VCBPtr->blockNumber = numberOfBlocks;
 	VCBPtr->blockSize = blockSize;
 	// TODO: VCBPtr->freeSpace = 
 	// TODO: VCBPtr->rootBlockNum = 
-	LBAwrite(VCBPtr, 1, 0);	
 	
+	initRootDirectory(VCBPtr);
+	LBAwrite(VCBPtr, 1, 0);	
+		
 	return 0;
 	}
 
 void initRootDirectory(VCB* VCBPtr){
+	// Decide how many DEs I want
+	// 50 for now I guess
+	// size of struct DE is 40, 40*50 is 2000, 2000/512 = 3.9 = 4, 4*512 = 2048
+	// 51*40 = 2040 -> 51 entries	
+	for(int i = 0; i < NUM_ENTRIES ; i++){
+		//TODO: initialize each structure to be in a known free state	
+	}
 
+	//TODO: ask free space system for 6 blocks, returns starting block
+	int startingBlock;
+	time_t rawTime;
+	
+	strcpy(entries[0].name, ".");
+	entries[0].size = ENTRY_MEMORY;
+	entries[0].location = startingBlock;
+	entries[0].time = time( &rawTime );
+
+	strcpy(entries[1].name, "..");
+	entries[1].size = ENTRY_MEMORY;
+	entries[1].location = startingBlock;
+	entries[1].time = time( &rawTime );
+
+	VCBPtr->rootBlockNum = startingBlock;
 }
+
 	
 void exitFileSystem ()
 	{
 	printf ("System exiting\n");
-	free(vcbPoint);
-	vcbPoint = NULL;
+	free(VCBPtr);
+	VCBPtr = NULL;
 	}

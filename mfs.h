@@ -25,6 +25,12 @@
 #define FT_DIRECTORY DT_DIR
 #define FT_LINK	DT_LNK
 
+#define SIGNATURE 0x414142424A434B4D
+#define NUM_ENTRIES 51
+#define DIRECTORY_ENTRY_SIZE 40
+#define ENTRY_MEMORY NUM_ENTRIES*DIRECTORY_ENTRY_SIZE
+
+
 #ifndef uint64_t
 typedef u_int64_t uint64_t;
 #endif
