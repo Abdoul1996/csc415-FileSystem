@@ -59,9 +59,16 @@ int fs_delete(char* filename);	//removes a file
 //getcwd
 //  - strcpy(buffer, cwdname)
 
-//opendir
+//opendir(path)
+//  - parse path
+//  -
 
-//readdir
+//readdir(fdDir)
+// for (iffddir->current; i < fddir=max;i++)
+//  - if(ifdir->directory[i] is used)
+//      - copy name of fddir;directory[i].name
+//      - fd->item.name
+//      - fd->item.type =f/d
 
 //closedir
 
