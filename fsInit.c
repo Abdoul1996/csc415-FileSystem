@@ -25,6 +25,8 @@
 #include "mfs.h"
 #include "fsFreeSpace.c"
 
+#include "parsePath.c"
+
 #define DEBUG 1 // Allows debugging by skipping VCBPtr->sig == signature check
 
 directoryEntry * entries[NUM_ENTRIES];
@@ -51,6 +53,9 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	VCBPtr->freeSpace = initFreeSpace(); 	
 	initRootDirectory(VCBPtr);	// init function sets the rootBlockNumber
 	LBAwrite(VCBPtr, 1, 0);		// write data to hard disk / memory
+
+	// initParsePath(entires)?
+	
 		
 	return 0; 			// return value unsure on 0
 	}
@@ -83,6 +88,10 @@ void initRootDirectory(VCB* VCBPtr){
 	entries[1]->size = ENTRY_MEMORY;
 	entries[1]->location = startingBlock;
 	entries[1]->time = time( &rawTime );
+
+	parsePathStruct pps;
+
+	parsePath(&entries, &pps);
 
 	VCBPtr->rootBlockNum = startingBlock; // setting rootBlockNum to beginning or root dir
 }
