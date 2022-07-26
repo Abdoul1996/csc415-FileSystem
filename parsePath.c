@@ -11,12 +11,11 @@ struct parsePathStruct{
     int isValid;  // 1 for valid / 0 for invalid
     int isFile;      // 1 for file  / 0 for directory / -1 if invalid ?
     // add more fields here
-
 };
 
-typedef struct parsePath parsePathStruct;
+//typedef struct parsePath parsePathStruct;
 
-void parsePath(directoryEntry * entries[], parsePathStruct * pps);
+void parsePath(directoryEntry * entries[], struct parsePathStruct * pps);
 
 
 // to call this fucntion you must pass an empty parsePathStruct
@@ -24,17 +23,28 @@ void parsePath(directoryEntry * entries[], parsePathStruct * pps);
 // valid, if path ref's file or directory, etc...
 
 //void parsePath(char * path, parsePathStruct * parsePathStruct){
-void parsePath(directoryEntry * entries[], parsePathStruct * pps){
+void parsePath(directoryEntry * entries[], struct parsePathStruct * pps){
     // use the path arg to lookup each part in entries[i]
     // started in fsInit.c
 
     // examples tested
-    char path[] = "/home/var/this/that";
-    //char path[] = "home/var/this/that";
+    char * path = "/home/var/this/that";
+    // char path[] = "home/var/this/that";
 
     // grab first char value
-    char first = path[0];
-    printf("%c \n", first);
+    //char first = path[0];
+    //printf("%c \n", first);
+
+    char *cmp1;
+    char *cmp2;
+
+    const char slash = "/";
+
+    //strcpy(cmp1,path[0]);
+    memcpy(cmp1, path[0], 1);
+
+
+    strcpy(cmp2,slash);
 
     // if first == "/" -> load root directory for searching
     // else -> load current working directory for seraching
@@ -46,16 +56,18 @@ void parsePath(directoryEntry * entries[], parsePathStruct * pps){
 
     //load the first token
     // Returns first token after the slash, before the next.
-    char* token = strtok(path, "/");
-    printf("%s \n", token);
+    char * token = strtok(path, "/");
+    printf("first: %s \n", token);
 
-    char * entryName;
+    //char * entryName;
     int isFound = 0;
     int p = 0;
    
     // if first == "/" -> load root directory for searching
     // else -> load current working directory for seraching
-    if(strcmp(first,"/")==0){
+    // if(strcmp(path[0],"/")==0){
+    if(strcmp(cmp1, cmp2)==0){
+        printf("/ matches... \n");
         while (token != NULL) {
             isFound = 0;
             // search through the values of entries[] looking for first token
@@ -63,8 +75,9 @@ void parsePath(directoryEntry * entries[], parsePathStruct * pps){
             //for(int p=0;p<NUM_ENTRIES;p++){
             p = 0;
             while(entries[p]!=NULL){
-                entryName = entries[p]->name;
-                if(strcmp(entryName,token)==0){
+                printf("looping, p=%d \n", p);
+                //entryName = entries[p]->name;
+                if(strcmp(entries[p]->name,token)==0){
                     isFound = 1;
 
                     // this token of path is valid, keep going.
@@ -76,9 +89,9 @@ void parsePath(directoryEntry * entries[], parsePathStruct * pps){
             }
 
             //check if it was found
-            if(!ifFound){
+            if(!isFound){
                 printf("error: pathname not valid. \n");
-                pps->isValid = 0;
+                //pps->isValid = 0;
                 return;
             }
             // otherwise, if isFound after the loop, continue.
@@ -89,7 +102,7 @@ void parsePath(directoryEntry * entries[], parsePathStruct * pps){
         }
         // if we made it to here, isFound=1 on each loop,
         // so the path is valid.
-        pps->isValid = 1;
+        //pps->isValid = 1;
         
 
     }

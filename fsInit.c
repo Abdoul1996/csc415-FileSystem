@@ -89,7 +89,7 @@ void initRootDirectory(VCB* VCBPtr){
 	entries[1]->location = startingBlock;
 	entries[1]->time = time( &rawTime );
 
-	parsePathStruct pps;
+	struct parsePathStruct pps; //= malloc(sizeof(parsePathStruct));
 
 	parsePath(&entries, &pps);
 
