@@ -15,19 +15,7 @@
 *
 **************************************************************/
 #include "mfs.h"
-
-int fs_mkdir(const char *pathname, mode_t mode);
-int fs_rmdir(const char *pathname);
-fdDir * fs_opendir(const char *name);
-struct fs_diriteminfo *fs_readdir(fdDir *dirp);
-int fs_closedir(fdDir *dirp);
-
-char * fs_getcwd(char *buf, size_t size);
-int fs_setcwd(char *buf);   //linux chdir
-int fs_isFile(char * path);	//return 1 if file, 0 otherwise
-int fs_isDir(char * path);		//return 1 if directory, 0 otherwise
-int fs_delete(char* filename);	//removes a file
-
+#include "dir.h"
 
 //mkdir(path)
 //  - parse path
@@ -37,17 +25,27 @@ int fs_delete(char* filename);	//removes a file
 //      - index = get a free DirEntry(parent) needs a helper
 //      - parent[index] all info yada yada
 //      - writeDir(parent)
+int fs_mkdir(const char *pathname, mode_t mode){
+    // Parse Path
+}
 
 //setcwd (set current working directory)
 //  - parse path
 //      - if lastelement exist and is a dir continue else error
 //      - cwdptr = loaddir(parent[i].location)
 //      - char* cwdname = mallock()
+int fs_setcwd(char *buf){
+    //parse path
+    char* cwdname = malloc();
+}
 
 //fs_delete(path)
 //  - parse path
 //      - if last element exists and is file deleteentry(parent, i)
 //          - releases blob db is unused
+int fs_delete(char* filename){
+
+}
 
 //rmdir
 //  - parse path
@@ -55,13 +53,24 @@ int fs_delete(char* filename);	//removes a file
 //          - load(parent)
 //          - scan parent looks for . and ..
 //      - if empty call deleteEntry look above
+int fs_rmdir(const char *pathname){
+    
+}
 
 //getcwd
 //  - strcpy(buffer, cwdname)
+char * fs_getcwd(char *buf, size_t size){
+    strcpy(buf, cwdname);
+    return buf;
+}
 
 //opendir(path)
 //  - parse path
 //  -
+fdDir * fs_opendir(const char *name){
+    int ret = b_open(name, 0);
+    if (ret < 0)
+}
 
 //readdir(fdDir)
 // for (iffddir->current; i < fddir=max;i++)
@@ -69,8 +78,16 @@ int fs_delete(char* filename);	//removes a file
 //      - copy name of fddir;directory[i].name
 //      - fd->item.name
 //      - fd->item.type =f/d
+struct fs_diriteminfo *fs_readdir(fdDir *dirp){
+
+}
 
 //closedir
+int fs_closedir(fdDir *dirp){
+    printf("Closing Directory...");
+    free cwdname
+    return 0;
+}
 
 // This is NOT the directory entry, it is JUST for readdir.
 struct fs_diriteminfo
