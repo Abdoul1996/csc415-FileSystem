@@ -20,6 +20,7 @@
 
 #include "b_io.h"
 
+
 #include <dirent.h>
 #define FT_REGFILE	DT_REG
 #define FT_DIRECTORY DT_DIR
@@ -104,9 +105,12 @@ typedef struct directoryEntry{
 	char name[20];
 	int size;
 	int location;
+	int isFile; // 0 = directory, 1 = file
 	time_t time;
+	struct directoryEntry ** entries;
 	
 } directoryEntry;
+
 
 VCB *VCBPtr;
 

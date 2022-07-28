@@ -6,129 +6,75 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+//#include "parsePath.h"
 
-struct parsePathStruct{
+
+typedef struct parsedInfo{
     int isValid;  // 1 for valid / 0 for invalid
     int isFile;      // 1 for file  / 0 for directory / -1 if invalid ?
+    int lastElementIndex;
+    directoryEntry* parent;
     // add more fields here
-};
-
-//typedef struct parsePath parsePathStruct;
-
-void parsePath(directoryEntry * entries[], struct parsePathStruct * pps);
+} parsedInfo;
 
 
-// to call this fucntion you must pass an empty parsePathStruct
-// which this function will fill based upon if the pathname is 
-// valid, if path ref's file or directory, etc...
+void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, parsedInfo * info ){
+    char path[20] = "/home/var/this/that";
 
-//void parsePath(char * path, parsePathStruct * parsePathStruct){
-void parsePath(directoryEntry * entries[], struct parsePathStruct * pps){
-    // use the path arg to lookup each part in entries[i]
-    // started in fsInit.c
-
-    // examples tested
-    char * path = "/home/var/this/that";
-    // char path[] = "home/var/this/that";
-
-    // grab first char value
-    //char first = path[0];
-    //printf("%c \n", first);
-
-    char *cmp1;
-    char *cmp2;
-
-    const char slash = "/";
-
-    //strcpy(cmp1,path[0]);
-    memcpy(cmp1, path[0], 1);
-
-
-    strcpy(cmp2,slash);
-
-    // if first == "/" -> load root directory for searching
-    // else -> load current working directory for seraching
-
-    // root case - loading root dir.
-    printf("name: %s \n", entries[0]->name);
-    printf("size: %d \n", entries[0]->size);
-    printf("location: %d \n", entries[0]->location);
-
-    //load the first token
-    // Returns first token after the slash, before the next.
+    char prev[20] = ""; // TODO: define a constant 20, the path length limit
+    char curr[20] = "";
+    directoryEntry * myCwd;
     char * token = strtok(path, "/");
+
     printf("first: %s \n", token);
 
-    //char * entryName;
-    int isFound = 0;
-    int p = 0;
-   
-    // if first == "/" -> load root directory for searching
-    // else -> load current working directory for seraching
-    // if(strcmp(path[0],"/")==0){
-    if(strcmp(cmp1, cmp2)==0){
-        printf("/ matches... \n");
-        while (token != NULL) {
-            isFound = 0;
-            // search through the values of entries[] looking for first token
-            // loop over entries with first token
-            //for(int p=0;p<NUM_ENTRIES;p++){
-            p = 0;
-            while(entries[p]!=NULL){
-                printf("looping, p=%d \n", p);
-                //entryName = entries[p]->name;
-                if(strcmp(entries[p]->name,token)==0){
-                    isFound = 1;
 
-                    // this token of path is valid, keep going.
-                    // printf("error: pathname not valid. \n");
-                    // pps->isValid = 0;
-                    // return;
-                }
-                p++;
-            }
+    if(path[0] == '/') // loading root directory first
+	    myCwd = root;
+    else
+	    myCwd = cwd;
 
-            //check if it was found
-            if(!isFound){
-                printf("error: pathname not valid. \n");
-                //pps->isValid = 0;
-                return;
-            }
-            // otherwise, if isFound after the loop, continue.
+    int i = 0;
+    while(token != NULL){
+	strcpy(prev, curr);
+	strcpy(curr, token);
+	token = strtok(NULL, "/");	    
+	printf("itr: %d, prev: %s, curr: %s, token: %s\n", i++, prev, curr, token);
+	    // if token is NOT Null
+	    // for each curr word, search in the myCwd's directoryEntries to see if it exists. 
+	    // If it does exist, change myCwd = myCwd->entries[index]. If it doesn't, error
+	    // if token IS Null -> special case
+	    // check if curr exists 
+	    // if curr exists, find the index of curr from the parent or use .. ? 
+	    // if curr doesn't exist, return the parent memory location
+		if(token != NULL){
+	    		int index = 0; 
+			while(myCwd->entries[index] != NULL){
+				if(!(strcmp(curr, myCwd->entries[index]->name))){
+					myCwd = myCwd->entries[index];
+					break;
+				}
 
-            // load the next token after first run
-            token = strtok(NULL, "/");
-            printf("token: %s \n", token);
-        }
-        // if we made it to here, isFound=1 on each loop,
-        // so the path is valid.
-        //pps->isValid = 1;
-        
-
+				if(myCwd->entries[++index] == NULL){
+					info->isValid = 0;
+					return;
+				}
+			}
+		}
+		else if(token == NULL){ // NOTE: MyCwd == prev or the parent of "curr"
+			info->isValid = 1; // at this process point, path is valid
+			// next step: check cwd and see if curr exists
+			// if it does, get index and return
+			// if it doesn't, return (will need info on file/dir existing or not)
+			printf("in token == NULL condition\n");
+			printf("cwd name: %s\n", myCwd->name);
+			int itr = 0;
+			while(myCwd->entries[itr] != NULL)
+				printf("myCwd->entries[%d]->name: %s", itr, myCwd->entries[itr++]->name);
+			if(curr == NULL){
+				printf("token == NULL, curr == NULL");
+			}
+		}
+		    
     }
- 
-    // Keep printing tokens while one of the
-    // delimiters present in str[].
-
-
-    //if it is "/" -> load root directory, search for next
-    // value in the path
-
-    // Returns first token
-    //char * firstToken = strtok(str, "");
-
-    // this works to print the root dir first entry.
-    printf("name: %s \n", entries[0]->name);
-    printf("size: %d \n", entries[0]->size);
-    printf("location: %d \n", entries[0]->location);
-
-    // we then need to create a loop to go over all the entries in the root dir,
-    // checking for the for the first token
-    
-
-
-
-    // fill the fields of the the passed struct
-
-    //return parsePathStruct;
 }
