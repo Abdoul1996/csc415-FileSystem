@@ -10,7 +10,7 @@
 
 
 typedef struct parsedInfo{
-    int isValid;  // 1 for valid / 0 for invalid
+    int isPathValid;  // 1 for valid / 0 for invalid
     int isFile;      // 1 for file  / 0 for directory / -1 if invalid ?
     int lastElementIndex;
     directoryEntry* parent;
@@ -27,7 +27,9 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
     char * token = strtok(path, "/");
 
     printf("first: %s \n", token);
-
+    
+    info->isFile = -1;
+    info->lastElementIndex = -1; 
 
     if(path[0] == '/') // loading root directory first
 	    myCwd = root;
@@ -48,33 +50,39 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
 	    // if curr exists, find the index of curr from the parent or use .. ? 
 	    // if curr doesn't exist, return the parent memory location
 		if(token != NULL){
-	    		int index = 0; 
-			while(myCwd->entries[index] != NULL){
+	    		int index = 1; 
+			while(myCwd->entries[++index] != NULL){
 				if(!(strcmp(curr, myCwd->entries[index]->name))){
 					myCwd = myCwd->entries[index];
 					break;
 				}
 
-				if(myCwd->entries[++index] == NULL){
-					info->isValid = 0;
+				if(myCwd->entries[index] == NULL){
+					info->isPathValid = 0;
 					return;
 				}
 			}
 		}
 		else if(token == NULL){ // NOTE: MyCwd == prev or the parent of "curr"
-			info->isValid = 1; // at this process point, path is valid
-			// next step: check cwd and see if curr exists
-			// if it does, get index and return
-			// if it doesn't, return (will need info on file/dir existing or not)
-			printf("in token == NULL condition\n");
+			info->parent = myCwd;
+			info->isPathValid = 1; // at this process point, path is valid
+			// next step: loop thru cwd->entries and see if curr exists
+			// if it does, get index, filetype(?) and return
+			// if it doesn't, lastElementIndex stays -1 to denote file not existing 
 			printf("cwd name: %s\n", myCwd->name);
-			int itr = 0;
-			while(myCwd->entries[itr] != NULL)
-				printf("myCwd->entries[%d]->name: %s", itr, myCwd->entries[itr++]->name);
-			if(curr == NULL){
-				printf("token == NULL, curr == NULL");
-			}
+			
+			int itr = 1; // 0 = ., 1 = .., in loop will be entries[2]
+			while(myCwd->entries[++itr] != NULL){
+				if(!(strcmp(myCwd->entries[itr], curr))){
+					info->lastElementIndex = itr;
+					info->isFile = myCwd->entries[itr]->isFile;
+					return;
+				}
+			} 
+			// at end of while, means curr was not found in myCwd->entries
+			return;
 		}
+	}
 		    
-    }
+    
 }
