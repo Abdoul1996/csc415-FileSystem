@@ -70,7 +70,7 @@ int fs_delete(char* filename){
 
 // Directory iteration functions
 fdDir * fs_opendir(const char *name){
-	parsePath(cwd, root, );
+//	parsePath(cwd, root, );
 }
 
 // Closes the directory
@@ -78,18 +78,18 @@ int fs_closedir(fdDir *dirp){
 	printf("Closing Directory...");
 	
 	// Free and NULL all mallocs
-	free(info);
-	info = NULL;
+	//free(info);
+	//info = NULL;
 
 	return 0;
 }
 
 // Misc directory functions
 char * fs_getcwd(char *buf, size_t size){
-	if((buf != NULL) &&& strlen(cwd) < size){
+/*	if((buf != NULL) &&& strlen(cwd) < size){
 		strcpy(buf, cwd);
 	}
-	return buf;
+	return buf;*/
 }
 
 int fs_setcwd(char *buf){
@@ -118,7 +118,7 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 	//print values from dirp
 	printf("reclen= %hu\n", dirp->d_reclen);
 	printf("dEP= %hu\n", dirp->dirEntryPosition);
-	printf("dSL=%d \n",dirp->directoryStartLocation);
+	printf("dSL=%ld \n",dirp->directoryStartLocation);
 
 	// det. how to translate the values into the output format
 
@@ -130,7 +130,8 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 
 }
 
-
+int fs_stat(const char *path, struct fs_stat *buf){
+}
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	int index = -1;
 
