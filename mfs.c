@@ -23,22 +23,40 @@ int fs_mkdir(const char *pathname, mode_t mode){
 	
 	return newDir;
 }
+
 int fs_rmdir(const char *pathname){
 }
 
 // Directory iteration functions
 fdDir * fs_opendir(const char *name){
+	parsePath(cwd, root, );
 }
+
+// Closes the directory
 int fs_closedir(fdDir *dirp){
+	printf("Closing Directory...");
+	
+	// Free and NULL all mallocs
+	free(info);
+	info = NULL;
+
+	return 0;
 }
 
 // Misc directory functions
 char * fs_getcwd(char *buf, size_t size){
+	if((buf != NULL) &&& strlen(cwd) < size){
+		strcpy(buf, cwd);
+	}
+	return buf;
 }
+
 int fs_setcwd(char *buf){
 }	//linux chdir
+
 int fs_isFile(char * path){
 }     //return 1 if file, 0 otherwise
+
 int fs_isDir(char * path){
 }             //return 1 if directory, 0 otherwise
 int fs_delete(char* filename){
