@@ -60,7 +60,11 @@ int fs_rmdir(const char *pathname){
 //getcwd
 //  - strcpy(buffer, cwdname)
 char * fs_getcwd(char *buf, size_t size){
-    strcpy(buf, cwdname);
+    
+    if((buf != NULL) && strlen(cwdname)<size){
+         strcpy(buf, cwdname);
+    }
+   
     return buf;
 }
 
