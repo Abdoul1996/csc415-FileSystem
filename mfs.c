@@ -96,8 +96,8 @@ int fs_closedir(fdDir *dirp){
 	
 	// Free and NULL all mallocs
 		// info is from fs_mkdir
-	free(info);
-	info = NULL;
+	//free(info);
+	//info = NULL;
 
 	return 0;
 }
@@ -142,7 +142,15 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 
 	// take those steps
 
-<<<<<<< Updated upstream
+	//returns firiteminfo struct.
+
+
+}
+
+
+directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
+	int index = -1;
+
 
 	//returns firiteminfo struct.
 
@@ -153,18 +161,7 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	int index = -1;
 
-=======
 
-	//returns firiteminfo struct.
-
-
-}
-
-
-directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
-	int index = -1;
-
->>>>>>> Stashed changes
 	// Create a directoryEntry in the parent's entries
 	// Checking if there is any space
 	for(int i = 2; i < NUM_ENTRIES; i++){
