@@ -87,8 +87,7 @@ fdDir * fs_opendir(const char *name){
 	} else {
 		printf("Error opening Directory! Check line 31 or mfs.c");
 		return -1;
-	}
-	
+	}	
 }
 
 // Closes the directory
@@ -143,6 +142,7 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 
 	// take those steps
 
+<<<<<<< Updated upstream
 
 	//returns firiteminfo struct.
 
@@ -153,6 +153,18 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	int index = -1;
 
+=======
+
+	//returns firiteminfo struct.
+
+
+}
+
+
+directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
+	int index = -1;
+
+>>>>>>> Stashed changes
 	// Create a directoryEntry in the parent's entries
 	// Checking if there is any space
 	for(int i = 2; i < NUM_ENTRIES; i++){
