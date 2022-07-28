@@ -41,6 +41,7 @@ typedef u_int32_t uint32_t;
 #endif
 
 
+
 // This structure is returned by fs_readdir to provide the caller with information
 // about each file as it iterates through a directory
 struct fs_diriteminfo
@@ -115,7 +116,8 @@ typedef struct directoryEntry{
 
 directoryEntry* root; 
 directoryEntry* cwd; 
-
+directoryEntry * createDir(char* name, int isFile, directoryEntry* parent); 
+int deleteEntry(directoryEntry* parent, int elementIndex);
 
 VCB *VCBPtr;
 

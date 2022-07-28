@@ -22,10 +22,10 @@
 #include <string.h>
 #include <math.h>
 #include "fsLow.h"
-#include "mfs.h"
-#include "fsFreeSpace.c"
+#include "mfs.c"
+//#include "fsFreeSpace.c"
 
-#include "parsePath.c"
+//#include "parsePath.c"
 
 #define DEBUG 1 // Allows debugging by skipping VCBPtr->sig == signature check
 
@@ -33,7 +33,8 @@
 //directoryEntry * cwd;
 void initRootDirectory(VCB* VCBPtr);
 
-directoryEntry * createDir(char* name, int isFile, directoryEntry* parent); 
+
+
 
 int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	{
@@ -70,7 +71,6 @@ void initRootDirectory(VCB* VCBPtr){
 	// 4 * 512 = 2048
 	// 51*40 = 2040 -> 51 DEs
 
-	// TODO: Change entries to be root->entries
 //	for(int i = 0; i < NUM_ENTRIES ; i++){
 //		root->entries[i] = NULL; // Null is free state	
 //	}
@@ -110,72 +110,15 @@ void initRootDirectory(VCB* VCBPtr){
 	directoryEntry* home = createDir("home", 0, root);
 	directoryEntry* var = createDir("var", 0, home);
 	directoryEntry* this = createDir("this", 0, var);
-	// directoryEntry* that = createDir("that", 0, this);
-	// parsePath(cwd, root, pathToParse, info);
-	// printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
-	
-	//fs_isFile(pathToParse);
-	
+	directoryEntry* that = createDir("that", 0, this);
+	fs_mkdir(pathToParse, S_IRWXU);
+	//parsePath(cwd, root, pathToParse, info);
+	//printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
 	VCBPtr->rootBlockNum = startingBlock; // setting rootBlockNum to beginning or root dir
-	//fs_mkdir(pathToParse, S_IRWXU);	
 }
 
-directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
-	int index = -1;
 
-	// Create a directoryEntry in the parent's entries
-	// Checking if there is any space
-	for(int i = 2; i < NUM_ENTRIES; i++){
-		if(parent->entries[i] == NULL){
-			index = i;
-			break;
-		}
-	}
-
-	if(index == -1)
-		return NULL;
-	
-	// allocating memory for the new directory to be added
-	directoryEntry* currentDir = malloc(sizeof(directoryEntry));
-	int freeSpaceBlock = freeSpaceRequest(DIR_ENTRY_BLOCKS); 
-	time_t rawTime;
-	strcpy(currentDir->name, name);
-	currentDir->size = ENTRY_MEMORY;
-	currentDir->location = freeSpaceBlock;
-	currentDir->time = time( &rawTime );
-	currentDir->isFile = isFile;
-	
-	// allocating memory for the entries of new directory to be added
-	currentDir->entries = malloc(sizeof(directoryEntry*) * NUM_ENTRIES);
-
-	// free state
-	for(int i = 0; i < NUM_ENTRIES; i++){
-		currentDir->entries[i] = NULL;
-	}
-	// initializing . (self) and .. (parent) directories
-	currentDir->entries[0] = malloc(sizeof(directoryEntry));
-	strcpy(currentDir->entries[0]->name, ".");
-	currentDir->entries[0]->size = currentDir->size;
-	currentDir->entries[0]->location = freeSpaceBlock;
-	currentDir->entries[0]->time = currentDir->time;
-	currentDir->entries[0]->isFile = currentDir->isFile;
-	
-	currentDir->entries[1] = malloc(sizeof(directoryEntry));
-	strcpy(currentDir->entries[1]->name, "..");
-	currentDir->entries[1]->size = parent->size;
-	currentDir->entries[1]->location = parent->location;
-	currentDir->entries[1]->time = parent->time;
-	currentDir->entries[1]->isFile = parent->isFile;
-	currentDir->entries[1]->entries = parent->entries;
-
-	// setting . to go back to self
-	currentDir->entries[0]->entries = currentDir->entries;
-	// setting the new directory to the index of parent 
-	parent->entries[index] = currentDir;
-	
-	// return directoryEntry memory location of the child 
-	return currentDir;
-}
+// TODO: Move createDir and deleteEntry
 
 
 	
