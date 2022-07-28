@@ -26,6 +26,7 @@
 #define FT_DIRECTORY DT_DIR
 #define FT_LINK	DT_LNK
 
+#define NAME_LIMIT 20
 #define SIGNATURE 0x414142424A434B4D
 #define NUM_ENTRIES 51
 #define DIRECTORY_ENTRY_SIZE 40
@@ -38,6 +39,7 @@ typedef u_int64_t uint64_t;
 #ifndef uint32_t
 typedef u_int32_t uint32_t;
 #endif
+
 
 // This structure is returned by fs_readdir to provide the caller with information
 // about each file as it iterates through a directory
@@ -102,7 +104,7 @@ typedef struct VCB{
 } VCB;
 
 typedef struct directoryEntry{
-	char name[20];
+	char name[NAME_LIMIT];
 	int size;
 	int location;
 	int isFile; // 0 = directory, 1 = file
@@ -110,6 +112,9 @@ typedef struct directoryEntry{
 	struct directoryEntry ** entries;
 	
 } directoryEntry;
+
+directoryEntry* root; 
+directoryEntry* cwd; 
 
 
 VCB *VCBPtr;

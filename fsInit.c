@@ -29,8 +29,8 @@
 
 #define DEBUG 1 // Allows debugging by skipping VCBPtr->sig == signature check
 
-directoryEntry * root;
-directoryEntry * cwd;
+//directoryEntry * root;
+//directoryEntry * cwd;
 void initRootDirectory(VCB* VCBPtr);
 
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent); 
@@ -106,14 +106,15 @@ void initRootDirectory(VCB* VCBPtr){
 
 	cwd = root;
 	parsedInfo * info = malloc(sizeof(parsedInfo));
-	char pathToParse[20] = "/home/var/this/that";
+	char pathToParse[NAME_LIMIT] = "/home/var/this/that";
 	directoryEntry* home = createDir("home", 0, root);
 	directoryEntry* var = createDir("var", 0, home);
 	directoryEntry* this = createDir("this", 0, var);
-	directoryEntry* that = createDir("that", 0, this);
-	parsePath(cwd, root, pathToParse, info);
-	printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
+	//directoryEntry* that = createDir("that", 0, this);
+//	parsePath(cwd, root, pathToParse, info);
+//	printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
 	VCBPtr->rootBlockNum = startingBlock; // setting rootBlockNum to beginning or root dir
+	fs_mkdir(pathToParse, S_IRWXU);	
 }
 
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){

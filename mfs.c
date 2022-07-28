@@ -1,36 +1,47 @@
 //insert header here
 
-
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include "fsLow.h"
-#include "fsFreeSpace.c"
-#include "fsFunctions.h"
+#include "mfs.h"
 #include "parsePath.c"
+#include "fsInit.c"
+// Key directory functions
+//int fs_mkdir(const char *pathname, mode_t mode);
 
-
-
-int fs_isFile(directoryEntry * entry){
-	return entry->isFile;
-}
-
-int fs_isDir(directoryEntry * entry){
-	return !(entry->isFile);
-}
-
-
-int fs_mkdir(char* path){
-	
-	parsePathStruct * pp = malloc(sizeof(parsePathStruct));
-	parsePath(path, pp);
-	// TODO: check parsePath for error
-	if(pp->lastElementIndex >= 0)
+// Key directory functions
+//
+// void parsePath(directoryEntry* cwd, directoryEntry* root, char* pathToParse, parseInfo* info)
+int fs_mkdir(const char *pathname, mode_t mode){
+	char pathToParse[NAME_LIMIT];
+	strcpy(pathToParse, pathname);
+	parsedInfo* info = malloc(sizeof(parsedInfo));
+	parsePath(cwd, root, pathToParse, info);
+	// TODO: check return value for error
+	if(info->isPathValid == 0)
 		return (-2);
-
-	// TODO: adapt initRootDirectory to createDir function
+	if(info->lastElementIndex >= 0)
+		return (-2);
+	directoryEntry* newDir = createDir(info->newEntryName, info->isFile, info->parent);
+	
+	return newDir;
 }
+int fs_rmdir(const char *pathname){
+}
+
+// Directory iteration functions
+fdDir * fs_opendir(const char *name){
+}
+int fs_closedir(fdDir *dirp){
+}
+
+// Misc directory functions
+char * fs_getcwd(char *buf, size_t size){
+}
+int fs_setcwd(char *buf){
+}	//linux chdir
+int fs_isFile(char * path){
+}     //return 1 if file, 0 otherwise
+int fs_isDir(char * path){
+}             //return 1 if directory, 0 otherwise
+int fs_delete(char* filename){
+}//removes a file
+
 

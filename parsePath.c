@@ -13,16 +13,17 @@ typedef struct parsedInfo{
     int isPathValid;  // 1 for valid / 0 for invalid
     int isFile;      // 1 for file  / 0 for directory / -1 if invalid ?
     int lastElementIndex;
+    char newEntryName[NAME_LIMIT];
     directoryEntry* parent;
     // add more fields here
 } parsedInfo;
-
+// TODO: separate into header files
 
 void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, parsedInfo * info ){
     char path[20] = "/home/var/this/that";
 
-    char prev[20] = ""; // TODO: define a constant 20, the path length limit
-    char curr[20] = "";
+    char prev[NAME_LIMIT] = "";
+    char curr[NAME_LIMIT] = "";
     directoryEntry * myCwd;
     char * token = strtok(path, "/");
 
@@ -65,6 +66,7 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
 		}
 		else if(token == NULL){ // NOTE: MyCwd == prev or the parent of "curr"
 			info->parent = myCwd;
+			strcpy(info->newEntryName, curr);
 			info->isPathValid = 1; // at this process point, path is valid
 			// next step: loop thru cwd->entries and see if curr exists
 			// if it does, get index, filetype(?) and return
@@ -73,7 +75,7 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
 			
 			int itr = 1; // 0 = ., 1 = .., in loop will be entries[2]
 			while(myCwd->entries[++itr] != NULL){
-				if(!(strcmp(myCwd->entries[itr], curr))){
+				if(!(strcmp(myCwd->entries[itr]->name, curr))){
 					info->lastElementIndex = itr;
 					info->isFile = myCwd->entries[itr]->isFile;
 					return;
