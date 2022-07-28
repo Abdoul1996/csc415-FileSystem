@@ -29,7 +29,25 @@ int fs_rmdir(const char *pathname){
 
 // Directory iteration functions
 fdDir * fs_opendir(const char *name){
-	parsePath(cwd, root, );
+	// Parsing process
+	char pathToParse[NAME_LIMIT];
+	strcpy(pathToParse, name);
+	parsedInfo* info = malloc(sizeof(parsedInfo));
+	parsePath(cwd, root, pathToParse, info);
+
+	// Checking if the last element exists and is a directory.
+	if(info->lastElementIndex > 0){
+		fdDir* parsedInfo = malloc(sizeof(fdDir));
+
+		parsedInfo->d_reclen = loadDir(info->lastElementIndex);
+		parsedInfo->directoryStartLocation = 0;
+		parsedInfo->dirEntryPosition = info->lastElementIndex.size / sizeof(directoryEntry);
+		return parsedInfo;
+	} else {
+		printf("Error opening Directory! Check line 31 or mfs.c");
+		return -1;
+	}
+	
 }
 
 // Closes the directory
@@ -37,6 +55,7 @@ int fs_closedir(fdDir *dirp){
 	printf("Closing Directory...");
 	
 	// Free and NULL all mallocs
+		// info is from fs_mkdir
 	free(info);
 	info = NULL;
 
