@@ -110,11 +110,14 @@ void initRootDirectory(VCB* VCBPtr){
 	directoryEntry* home = createDir("home", 0, root);
 	directoryEntry* var = createDir("var", 0, home);
 	directoryEntry* this = createDir("this", 0, var);
-	//directoryEntry* that = createDir("that", 0, this);
-//	parsePath(cwd, root, pathToParse, info);
-//	printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
+	// directoryEntry* that = createDir("that", 0, this);
+	// parsePath(cwd, root, pathToParse, info);
+	// printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
+	
+	//fs_isFile(pathToParse);
+	
 	VCBPtr->rootBlockNum = startingBlock; // setting rootBlockNum to beginning or root dir
-	fs_mkdir(pathToParse, S_IRWXU);	
+	//fs_mkdir(pathToParse, S_IRWXU);	
 }
 
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){

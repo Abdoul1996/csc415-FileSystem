@@ -55,11 +55,43 @@ int fs_setcwd(char *buf){
 }	//linux chdir
 
 int fs_isFile(char * path){
+	//call parsepath, return the isFile field
+	char pathToParse[NAME_LIMIT];
+	strcpy(pathToParse, path);
+	parsedInfo* info = malloc(sizeof(parsedInfo));
+	parsePath(cwd, root, pathToParse, info);
+
+	printf("isFile returned: %d \n", info->isFile);
+
+	return info->isFile;
+
 }     //return 1 if file, 0 otherwise
 
 int fs_isDir(char * path){
+	//call isFile, return opposite.
+	return !fs_isFile(path);
+
 }             //return 1 if directory, 0 otherwise
+
+
 int fs_delete(char* filename){
 }//removes a file
+
+struct fs_diriteminfo *fs_readdir(fdDir *dirp){
+	//takes fddir ptr
+	//print values from dirp
+	printf("reclen= %hu\n", dirp->d_reclen);
+	printf("dEP= %hu\n", dirp->dirEntryPosition);
+	printf("dSL=%d \n",dirp->directoryStartLocation);
+
+	// det. how to translate the values into the output format
+
+	// take those steps
+
+
+	//returns firiteminfo struct.
+
+
+}
 
 
