@@ -65,6 +65,8 @@ int fs_delete(char* filename){
                 return (-2);    // if last element doesn't exist, error
         if(!info->parent->entries[info->lastElementIndex]->isFile)
                 return (-2);    // if last element is not a directory (0 = dir, 1 = file), error
+
+
 }//removes a file
 
 
