@@ -168,5 +168,6 @@ int b_read (b_io_fd fd, char * buffer, int count)
 // Interface to Close the file	
 int b_close (b_io_fd fd)
 	{
-
+		printf("Closing...\n");
+		b_fcb* fcb = &fcbArray[fd];
 	}
