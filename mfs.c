@@ -51,7 +51,32 @@ char * fs_getcwd(char *buf, size_t size){
 	return buf;
 }
 
+
+//setcwd (set current working directory)
+//  - parse path
+//      - if lastelement exist and is a dir continue else error
+//      - cwdptr = loaddir(parent[i].location)
+//      - char* cwdname = mallock()
+
 int fs_setcwd(char *buf){
+	char pathToParse[NAME_LIMIT];
+	strcpy(pathToParse, pathname);
+	parsedInfo* info = malloc(sizeof(parsedInfo));
+	parsePath(cwd, root, pathToParse, info);
+
+	directoryEntry* 
+
+	dir
+	if(info->lastELementIndex == 1) && 
+	
+	
+
+
+
+	
+	
+	
+
 }	//linux chdir
 
 int fs_isFile(char * path){
