@@ -80,9 +80,10 @@ fdDir * fs_opendir(const char *name){
 	if(info->lastElementIndex > 0){
 		fdDir* parsedInfo = malloc(sizeof(fdDir));
 
+		//TODO : still need to write loadDir
 		parsedInfo->d_reclen = loadDir(info->lastElementIndex);
 		parsedInfo->directoryStartLocation = 0;
-		parsedInfo->dirEntryPosition = info->lastElementIndex.size / sizeof(directoryEntry);
+		parsedInfo->dirEntryPosition = info->parent->entries[info->lastElementIndex]->size / sizeof(directoryEntry);
 		return parsedInfo;
 	} else {
 		printf("Error opening Directory! Check line 31 or mfs.c");
@@ -104,6 +105,8 @@ int fs_closedir(fdDir *dirp){
 
 // Misc directory functions
 char * fs_getcwd(char *buf, size_t size){
+
+
 /*	if((buf != NULL) &&& strlen(cwd) < size){
 		strcpy(buf, cwd);
 	}
