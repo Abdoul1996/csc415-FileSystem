@@ -65,7 +65,7 @@ int fs_delete(char* filename){
                 return (-2);    // if last element doesn't exist, error
         if(!info->parent->entries[info->lastElementIndex]->isFile)
                 return (-2);    // if last element is not a directory (0 = dir, 1 = file), error
-
+	return deleteEntry(info->parent, info->lastElementIndex);
 
 }//removes a file
 
@@ -153,14 +153,6 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 }
 
 
-directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
-	int index = -1;
-
-
-	//returns firiteminfo struct.
-
-
-}
 
 int fs_stat(const char *path, struct fs_stat *buf){
 }
