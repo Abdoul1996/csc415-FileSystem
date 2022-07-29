@@ -1,7 +1,8 @@
 make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/student/Abdoul/csc415-filesystem-BrandonButler08'
+make: Entering directory '/home/student/Documents/csc415-filesystem-BrandonButler08'
+ 
 gcc -c -o fsshell.o fsshell.c -g -I. 
 gcc -c -o fsInit.o fsInit.c -g -I. 
 gcc -o fsshell fsshell.o fsInit.o fsLow.o -g -I. -lm -l readline -l pthread
-make: Leaving directory '/home/student/Abdoul/csc415-filesystem-BrandonButler08'
+make: Leaving directory '/home/student/Documents/csc415-filesystem-BrandonButler08'
  

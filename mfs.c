@@ -105,15 +105,30 @@ int fs_closedir(fdDir *dirp){
 	return 0;
 }
 
+
 // Misc directory functions
 char * fs_getcwd(char *buf, size_t size){
+	char 
+	char pathToParse[NAME_LIMIT];
+	strcpy(pathToParse, buf);
+	parsedInfo* info = malloc(sizeof(parsedInfo));
+	parsePath(buf, root, pathToParse, info);
+
+	fs_opendir(pathToParse)
+
+	if(info->lastElement ==1){
+		fdDir* ret = malloc(sizeof(fdDir));
+		
+	}
 
 
-/*	if((buf != NULL) &&& strlen(cwd) < size){
+
+	/*if((buf != NULL) &&& strlen(cwd) < size){
 		strcpy(buf, cwd);
 	}
 	return buf;*/
 }
+
 
 
 //setcwd (set current working directory)
@@ -123,25 +138,41 @@ char * fs_getcwd(char *buf, size_t size){
 //      - char* cwdname = mallock()
 
 int fs_setcwd(char *buf){
+	char * cwdPtr;
+
 	char pathToParse[NAME_LIMIT];
-	strcpy(pathToParse, pathname);
+	strcpy(pathToParse, buf);
 	parsedInfo* info = malloc(sizeof(parsedInfo));
-	parsePath(cwd, root, pathToParse, info);
+	parsePath(buf, root, pathToParse, info);
 
-	directoryEntry* 
 
-	dir
-	if(info->lastELementIndex == 1) && 
+
+	if(info->lastELementIndex == 1){
+			directoryEntry* cwdptr = info->parent
+			char *cwdname = malloc();
+			strcpy(cwdname.path);
+	}else
+	{
+		fs_delete(path);
+		parsePath(buf, root, pathToparse, info);
+
+		if(info->lastELementIndex == 1 && info->isFile ==1){
+			fs_delete(info->parent)
+
+		}
+	}
+
+}
+
+
+
+
+
 	
 	
-
-
-
-	
-	
 	
 
-}	//linux chdir
+	//linux chdir
 
 int fs_isFile(char * path){
 	//call parsepath, return the isFile field

@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jul 28 17:24:11 2022
+# Make data base, printed on Thu Jul 28 19:18:32 2022
 
 # Variables
 
@@ -43,13 +43,13 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/student/Abdoul/csc415-filesystem-BrandonButler08
+CURDIR := /home/student/Documents/csc415-filesystem-BrandonButler08
 # makefile
 SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-_ = /usr/share/code/code
+JOURNAL_STREAM = 9:92337
 # makefile (from 'Makefile', line 42)
 CFLAGS = -g -I.
 # environment
@@ -67,9 +67,13 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # makefile (from 'Makefile', line 38)
 HW = 
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=3aebc5cbc23dd2898947856762e3289d
 # environment
 VSCODE_VERBOSE_LOGGING = true
+# environment
+_ = /usr/share/code/code
+# environment
+MANAGERPID = 19718
 # environment
 CLUTTER_IM_MODULE = xim
 # environment
@@ -94,6 +98,8 @@ XDG_MENU_PREFIX = gnome-
 VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = f06295f5f4c3430283743e6990357da6
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -103,7 +109,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 20267
+GIO_LAUNCHED_DESKTOP_FILE_PID = 23312
 # automatic
 %F = $(notdir $%)
 # environment
@@ -115,7 +121,7 @@ GTK_IM_MODULE = ibus
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /home/student/Abdoul/csc415-filesystem-BrandonButler08
+PWD = /home/student/Documents/csc415-filesystem-BrandonButler08
 # environment
 XDG_SEAT = seat0
 # environment
@@ -165,7 +171,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d04f4f6d-d66a-46b0-a230-b2f350aff459.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-45c68a97-fa12-49de-b2dc-1dd2546104eb.sock
 # environment
 XDG_SESSION_ID = 6
 # environment
@@ -211,9 +217,9 @@ LC_ALL = C
 # makefile (from 'Makefile', line 37)
 ROOTNAME = fsshell
 # environment
-QT4_IM_MODULE = xim
+DBUS_STARTER_BUS_TYPE = session
 # environment
-GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+QT4_IM_MODULE = xim
 # makefile (from 'Makefile', line 43)
 LIBS = pthread
 # automatic
@@ -228,16 +234,16 @@ CHROME_DESKTOP = code-url-handler.desktop
 WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
-# environment
-GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
 LANG = C
 # environment
-VSCODE_PID = 20267
+VSCODE_PID = 23312
+# environment
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=3aebc5cbc23dd2898947856762e3289d
 # variable set hash-table stats:
-# Load=112/1024=11%, Rehash=0, Collisions=21/157=13%
+# Load=115/1024=11%, Rehash=0, Collisions=22/160=14%
 
 # Pattern-specific Variable Values
 
@@ -245,9 +251,9 @@ VSCODE_PID = 20267
 
 # Directories
 
-# . (device 2049, inode 656365): 28 files, no impossibilities.
+# . (device 2049, inode 426108): 26 files, no impossibilities.
 
-# 28 files, no impossibilities in 1 directories.
+# 26 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -275,15 +281,15 @@ all:
 vrun: fsshell
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 70):
 	valgrind ./$(ROOTNAME)$(HW)$(FOPTION) $(RUNOPTIONS)
 
 # Not a target:
 Makefile:
- 
 #  Implicit rule search has been done.
-#  Last modified 2022-07-28 15:08:37.417175399
+#  Last modified 2022-07-28 19:16:43.492793047
 #  File has been updated.
 #  Successfully updated.
 
@@ -337,9 +343,9 @@ fsshell.o:
 # strcache buffers: 1 (0) / strings = 39 / storage = 336 B / avg = 8 B
 # current buf: size = 8162 B / used = 336 B / count = 39 / avg = 8 B
 
-# strcache performance: lookups = 52 / hit rate = 25%
+# strcache performance: lookups = 50 / hit rate = 22%
 # hash-table stats:
-# Load=39/8192=0%, Rehash=0, Collisions=1/52=2%
-# Finished Make data base on Thu Jul 28 17:24:11 2022
+# Load=39/8192=0%, Rehash=0, Collisions=1/50=2%
+# Finished Make data base on Thu Jul 28 19:18:32 2022
 
  
