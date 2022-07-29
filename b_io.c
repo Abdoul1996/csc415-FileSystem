@@ -53,20 +53,35 @@ b_io_fd b_getFCB ()
 	{
 	for (int i = 0; i < MAXFCBS; i++)
 		{
-		if (fcbArray[i].buff == NULL)
+		if (fcbArray[i].buf == NULL)
 			{
 			return i;		//Not thread safe (But do not worry about it for this assignment)
 			}
 		}
 	return (-1);  //all in use
 	}
-	
+
+// CreateFile()
+//	- Find free DirectoryEntry
+//	- ptr->DirectoryEntry
+//	- DirectoryEntry (size, loc, etc) = 0
+//	- return directoryEntry
+
 // Interface to open a buffered file
 // Modification of interface for this assignment, flags match the Linux flags for open
 // O_RDONLY, O_WRONLY, or O_RDWR
 b_io_fd b_open (char * filename, int flags)
 	{
 	b_io_fd returnFd;
+
+	// Parse path
+	// if last element is not found Use flags to check O_WRONLY, O_RDONLY, O_RDWR, TRUNC, CRBATE
+	
+	// Check flags
+	// Check Validity
+	// Check existence
+	// Create if needed
+	//	- ptr DirectEntry = CreateFile(parent Dir)
 
 	//*** TODO ***:  Modify to save or set any information needed
 	//
@@ -108,6 +123,8 @@ int b_write (b_io_fd fd, char * buffer, int count)
 		{
 		return (-1); 					//invalid file descriptor
 		}
+	
+	
 		
 		
 	return (0); //Change this
