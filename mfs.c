@@ -108,6 +108,8 @@ int fs_closedir(fdDir *dirp){
 
 // Misc directory functions
 char * fs_getcwd(char *buf, size_t size){
+	// TODO: Put loop for errors
+	
 	// Copies the current working directory into the buffer
 	strcpy(buf, cwd);
 
