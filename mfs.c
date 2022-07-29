@@ -117,37 +117,27 @@ char * fs_getcwd(char *buf, size_t size){
 	return buf;
 }
 
-
-
-//setcwd (set current working directory)
-//  - parse path
-//      - if lastelement exist and is a dir continue else error
-//      - cwdptr = loaddir(parent[i].location)
-//      - char* cwdname = mallock()
-
 int fs_setcwd(char *buf){
-	char * cwdPtr;
-
+	// Parse Path
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, buf);
 	parsedInfo* info = malloc(sizeof(parsedInfo));
-	parsePath(buf, root, pathToParse, info);
+	parsePath(cwd, root, pathToParse, info);
 
-	if(info->lastElementIndex == 1){
-			directoryEntry* cwdptr = info->parent;
-			char* cwdname = malloc();
-			strcpy(cwdname.path);
-	}else
-	{
-		fs_delete(path);
-		parsePath(buf, root, pathToParse, info);
-
-		if(info->lastElementIndex == 1 && info->isFile ==1){
-			fs_delete(info->parent)
-
-		}
+	// Checking to see if the last element exists and is an element. 
+	if(info->lastElementIndex > 0){
+		//TODO: loadDir
+		// Gets the location of the parent
+		directoryEntry * cwdPtr = loadDir(info->parent->entries[info->lastElementIndex]->location);
+		// Allocates the cwd to the length of the buffer.
+		char * cwd = malloc(strlen(buf));
+		// Copies the cwd with the buffer.
+		strcpy(cwd, buf);
+	} else {
+		// Error message
+		printf("Error in setcwd. Check line 128 of mfs.c");
+		return -1;
 	}
-
 }
 
 //linux chdir
