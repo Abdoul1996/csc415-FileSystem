@@ -186,7 +186,7 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 }
 
 
-
+// TODO: error checks
 int fs_stat(const char *path, struct fs_stat *buf){
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, path);
@@ -196,12 +196,14 @@ int fs_stat(const char *path, struct fs_stat *buf){
 	directoryEntry* toInsert = info->parent->entries[info->lastElementIndex];
 	DIR_ENTRY_BLOCKS;
 	ENTRY_MEMORY;
-	buf->st_size =
+	buf->st_size = toInsert->size;
 	buf->st_blksize = VCB->blockSize;
-	buf->st_blocks =
-	buf->st_accesstime =
-	buf->st_modtime =
-	buf->st_createtime =
+	buf->st_blocks = DIR_ENTRY_BLOCKS; // does this have to be calculated??
+	buf->st_accesstime = toInsert->time;
+	buf->st_modtime = toInsert->time;
+	buf->st_createtime = toInsert->time;
+
+	return 0; 
 
 }
 
