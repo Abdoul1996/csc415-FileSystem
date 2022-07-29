@@ -149,13 +149,29 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 
 	//returns firiteminfo struct.
 
-
+	
 }
 
 
 
 int fs_stat(const char *path, struct fs_stat *buf){
+	char pathToParse[NAME_LIMIT];
+	strcpy(pathToParse, path);
+	parsedInfo* info = malloc(sizeof(parsedInfo));
+	parsePath(cwd, root, pathToParse, info);
+	
+	directoryEntry* toInsert = info->parent->entries[info->lastElementIndex];
+	DIR_ENTRY_BLOCKS;
+	ENTRY_MEMORY;
+	buf->st_size =
+	buf->st_blksize
+	buf->st_blocks
+	buf->st_accesstime
+	buf->st_modtime
+	buf->st_createtime
+
 }
+
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	int index = -1;
 
@@ -213,6 +229,10 @@ directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	// return directoryEntry memory location of the child 
 	return currentDir;
 }
+
+int writeDir(){}
+
+int loadDir(){}
 
 // TODO: Free Space allocator
 int deleteEntry(directoryEntry* parent, int elementIndex){
