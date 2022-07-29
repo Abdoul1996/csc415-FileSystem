@@ -118,7 +118,8 @@ directoryEntry* root;
 directoryEntry* cwd; 
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent); 
 int deleteEntry(directoryEntry* parent, int elementIndex);
-
+int loadDir(directoryEntry* entry);
+int writeDir(directoryEntry* entry);
 VCB *VCBPtr;
 
 #endif

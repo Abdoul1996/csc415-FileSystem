@@ -83,7 +83,7 @@ fdDir * fs_opendir(const char *name){
 		fdDir* parsedInfo = malloc(sizeof(fdDir));
 
 		//TODO : still need to write loadDir
-		parsedInfo->d_reclen = loadDir(info->lastElementIndex);
+		parsedInfo->d_reclen = loadDir(info->parent->entries[info->lastElementIndex]);
 		parsedInfo->directoryStartLocation = 0;
 		parsedInfo->dirEntryPosition = info->parent->entries[info->lastElementIndex]->size / sizeof(directoryEntry);
 		return parsedInfo;
@@ -111,7 +111,7 @@ char * fs_getcwd(char *buf, size_t size){
 	// TODO: Put loop for errors
 	
 	// Copies the current working directory into the buffer
-	strcpy(buf, cwd);
+	strcpy(buf, cwd->name);
 
 	// Returns the now copied buffer.
 	return buf;
@@ -128,11 +128,12 @@ int fs_setcwd(char *buf){
 	if(info->lastElementIndex > 0){
 		//TODO: loadDir
 		// Gets the location of the parent
-		directoryEntry * cwdPtr = loadDir(info->parent->entries[info->lastElementIndex]->location);
+		//directoryEntry * cwdPtr = loadDir(info->parent->entries[info->lastElementIndex]); // TODO: fix this later to be able to use loadDir
+		directoryEntry* cwdPtr = info->parent->entries[info->lastElementIndex];
 		// Allocates the cwd to the length of the buffer.
-		char * cwd = malloc(strlen(buf));
+		char * localCwd = malloc(strlen(buf));
 		// Copies the cwd with the buffer.
-		strcpy(cwd, buf);
+		strcpy(localCwd, buf);
 	} else {
 		// Error message
 		printf("Error in setcwd. Check line 128 of mfs.c");
@@ -187,7 +188,7 @@ int fs_stat(const char *path, struct fs_stat *buf){
 	DIR_ENTRY_BLOCKS;
 	ENTRY_MEMORY;
 	buf->st_size = toInsert->size;
-	buf->st_blksize = VCB->blockSize;
+	buf->st_blksize = VCBPtr->blockSize;
 	buf->st_blocks = DIR_ENTRY_BLOCKS; // does this have to be calculated??
 	buf->st_accesstime = toInsert->time;
 	buf->st_modtime = toInsert->time;
