@@ -20,19 +20,18 @@ typedef struct parsedInfo{
 // TODO: separate into header files
 
 void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, parsedInfo * info ){
-    char path[20] = "/home/var/this/that";
 
     char prev[NAME_LIMIT] = "";
     char curr[NAME_LIMIT] = "";
     directoryEntry * myCwd;
-    char * token = strtok(path, "/");
+    char * token = strtok(pathToParse, "/");
 
     printf("first: %s \n", token);
     
     info->isFile = -1;
     info->lastElementIndex = -1; 
 
-    if(path[0] == '/') // loading root directory first
+    if(pathToParse[0] == '/') // loading root directory first
 	    myCwd = root;
     else
 	    myCwd = cwd;
@@ -74,7 +73,7 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
 			printf("cwd name: %s\n", myCwd->name);
 			
 			int itr = 1; // 0 = ., 1 = .., in loop will be entries[2]
-			while(myCwd->entries[++itr] != NULL){
+			while(myCwd->entries[++itr] != NULL){ // Finds curr in prev entries
 				if(!(strcmp(myCwd->entries[itr]->name, curr))){
 					info->lastElementIndex = itr;
 					info->isFile = myCwd->entries[itr]->isFile;

@@ -12,6 +12,11 @@
 *
 *
 **************************************************************/
+
+// TODO: FreeSpaceRequest needs to be fixed per MS1 comments from Bierman
+// TODO: API to release space and make it free
+
+
 #include <stdio.h>
 #include <stdint.h>
 #include <mfs.h>
