@@ -108,25 +108,13 @@ int fs_closedir(fdDir *dirp){
 
 // Misc directory functions
 char * fs_getcwd(char *buf, size_t size){
-	char 
-	char pathToParse[NAME_LIMIT];
-	strcpy(pathToParse, buf);
-	parsedInfo* info = malloc(sizeof(parsedInfo));
-	parsePath(buf, root, pathToParse, info);
+	// TODO: Put loop for errors
+	
+	// Copies the current working directory into the buffer
+	strcpy(buf, cwd);
 
-	fs_opendir(pathToParse)
-
-	if(info->lastElement ==1){
-		fdDir* ret = malloc(sizeof(fdDir));
-		
-	}
-
-
-
-	/*if((buf != NULL) &&& strlen(cwd) < size){
-		strcpy(buf, cwd);
-	}
-	return buf;*/
+	// Returns the now copied buffer.
+	return buf;
 }
 
 
@@ -145,18 +133,16 @@ int fs_setcwd(char *buf){
 	parsedInfo* info = malloc(sizeof(parsedInfo));
 	parsePath(buf, root, pathToParse, info);
 
-
-
-	if(info->lastELementIndex == 1){
-			directoryEntry* cwdptr = info->parent
-			char *cwdname = malloc();
+	if(info->lastElementIndex == 1){
+			directoryEntry* cwdptr = info->parent;
+			char* cwdname = malloc();
 			strcpy(cwdname.path);
 	}else
 	{
 		fs_delete(path);
-		parsePath(buf, root, pathToparse, info);
+		parsePath(buf, root, pathToParse, info);
 
-		if(info->lastELementIndex == 1 && info->isFile ==1){
+		if(info->lastElementIndex == 1 && info->isFile ==1){
 			fs_delete(info->parent)
 
 		}
@@ -164,16 +150,7 @@ int fs_setcwd(char *buf){
 
 }
 
-
-
-
-
-	
-	
-	
-
-	//linux chdir
-
+//linux chdir
 int fs_isFile(char * path){
 	//call parsepath, return the isFile field
 	char pathToParse[NAME_LIMIT];
@@ -220,11 +197,11 @@ int fs_stat(const char *path, struct fs_stat *buf){
 	DIR_ENTRY_BLOCKS;
 	ENTRY_MEMORY;
 	buf->st_size =
-	buf->st_blksize
-	buf->st_blocks
-	buf->st_accesstime
-	buf->st_modtime
-	buf->st_createtime
+	buf->st_blksize = VCB->blockSize;
+	buf->st_blocks =
+	buf->st_accesstime =
+	buf->st_modtime =
+	buf->st_createtime =
 
 }
 
