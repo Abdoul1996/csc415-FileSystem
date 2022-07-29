@@ -118,9 +118,6 @@ void initRootDirectory(VCB* VCBPtr){
 }
 
 
-// TODO: Move createDir and deleteEntry
-
-
 	
 void exitFileSystem (){
 	printf ("System exiting\n");

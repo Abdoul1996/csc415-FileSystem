@@ -37,7 +37,7 @@ int initFreeSpace(){
 	freeSpaceLocation++;
 	for(int i = 1; i <= 5; i++){ 	// Setting the next 5 blocks to 1 for free space map
 		int block = i/CHARSIZE;
-		freeSpace[block] = freeSpace[block] | (1 << (CHARSIZE - i%8 + 1));
+		freeSpace[block] = freeSpace[block] | (1 << (CHARSIZE - i%8));
 		freeSpaceLocation++;
 	}
 

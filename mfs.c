@@ -286,9 +286,17 @@ directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	return currentDir;
 }
 
-int writeDir(){}
+// LBAxxx( buffer, lbaCount, lbaPosition) lbaCount -> block #, lbaPosition -> block location
+int writeDir(directoryEntry* entry){ // LBAwrite, returns location 
+	int lbaCount = (entry->size + VCBPtr->blockSize - 1) / VCBPtr->blockSize;
+	return LBAwrite(entry, lbaCount, entry->location);
 
-int loadDir(){}
+}
+
+int loadDir(directoryEntry* entry){ // LBAread
+	int lbaCount = (entry->size + VCBPtr->blockSize - 1 ) / VCBPtr->blockSize;
+	return LBAread(entry, lbaCount, entry->location);
+}
 
 // TODO: Free Space allocator
 int deleteEntry(directoryEntry* parent, int elementIndex){
