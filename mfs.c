@@ -35,7 +35,7 @@ int fs_mkdir(const char *pathname, mode_t mode){
 	// TODO: free info
 	// TODO: Add WriteDir part	
 	
-	return newDir;
+	return 0;
 }
 
 int fs_rmdir(const char *pathname){
@@ -138,10 +138,8 @@ int fs_setcwd(char *buf){
 
 	// Checking to see if the last element exists and is an element. 
 	if(info->lastElementIndex > 0){
-		//TODO: loadDir
 		// Gets the location of the parent
-		//directoryEntry * cwdPtr = loadDir(info->parent->entries[info->lastElementIndex]); // TODO: fix this later to be able to use loadDir
-		directoryEntry* cwdPtr = info->parent->entries[info->lastElementIndex];
+		directoryEntry * cwdPtr = loadDir(info->parent->entries[info->lastElementIndex]);
 		// Allocates the cwd to the length of the buffer.
 		char * localCwd = malloc(strlen(buf));
 		// Copies the cwd with the buffer.
@@ -212,8 +210,6 @@ int fs_stat(const char *path, struct fs_stat *buf){
 	parsePath(cwd, root, pathToParse, info);
 	
 	directoryEntry* toInsert = info->parent->entries[info->lastElementIndex];
-	DIR_ENTRY_BLOCKS;
-	ENTRY_MEMORY;
 	buf->st_size = toInsert->size;
 	buf->st_blksize = VCBPtr->blockSize;
 	buf->st_blocks = DIR_ENTRY_BLOCKS; // does this have to be calculated??
@@ -243,7 +239,7 @@ directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	
 	// allocating memory for the new directory to be added
 	directoryEntry* currentDir = malloc(sizeof(directoryEntry));
-	int freeSpaceBlock = freeSpaceRequest(DIR_ENTRY_BLOCKS); 
+	int freeSpaceBlock = freeSpaceRequest(DIR_ENTRY_BLOCKS);
 	time_t rawTime;
 	strcpy(currentDir->name, name);
 	currentDir->size = ENTRY_MEMORY;
@@ -279,20 +275,22 @@ directoryEntry * createDir(char* name, int isFile, directoryEntry* parent){
 	// setting the new directory to the index of parent 
 	parent->entries[index] = currentDir;
 	
+	writeDir(currentDir);	
 	// return directoryEntry memory location of the child 
 	return currentDir;
 }
 
 // LBAxxx( buffer, lbaCount, lbaPosition) lbaCount -> block #, lbaPosition -> block location
 int writeDir(directoryEntry* entry){ // LBAwrite, returns location 
-	int lbaCount = (entry->size + VCBPtr->blockSize - 1) / VCBPtr->blockSize;
-	return LBAwrite(entry, lbaCount, entry->location);
+	return LBAwrite(entry, DIR_ENTRY_BLOCKS, entry->location); // TODO: error check
 
 }
 
-int loadDir(directoryEntry* entry){ // LBAread
-	int lbaCount = (entry->size + VCBPtr->blockSize - 1 ) / VCBPtr->blockSize;
-	return LBAread(entry, lbaCount, entry->location);
+//LBAread reads location data into the given buffer
+directoryEntry* loadDir(directoryEntry* parent){ // LBAread
+	directoryEntry* buffer = malloc(sizeof(directoryEntry));
+	LBAread(buffer, DIR_ENTRY_BLOCKS, parent->location);	// TODO: error check
+	return buffer;
 }
 
 // TODO: Free Space allocator

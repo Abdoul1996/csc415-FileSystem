@@ -29,8 +29,8 @@
 
 #define DEBUG 1 // Allows debugging by skipping VCBPtr->sig == signature check
 
-//directoryEntry * root;
-//directoryEntry * cwd;
+directoryEntry * root;
+directoryEntry * cwd;
 void initRootDirectory(VCB* VCBPtr);
 
 
@@ -57,7 +57,6 @@ int initFileSystem (uint64_t numberOfBlocks, uint64_t blockSize)
 	initRootDirectory(VCBPtr);	// init function sets the rootBlockNumber
 	LBAwrite(VCBPtr, 1, 0);		// write data to hard disk / memory
 
-	// initParsePath(entires)?
 	
 		
 	return 0; 			// return value unsure on 0
@@ -71,9 +70,6 @@ void initRootDirectory(VCB* VCBPtr){
 	// 4 * 512 = 2048
 	// 51*40 = 2040 -> 51 DEs
 
-//	for(int i = 0; i < NUM_ENTRIES ; i++){
-//		root->entries[i] = NULL; // Null is free state	
-//	}
 	
 	// Asking for starting block of allocated space from freespace.c
 	int startingBlock = freeSpaceRequest(DIR_ENTRY_BLOCKS);
@@ -111,9 +107,9 @@ void initRootDirectory(VCB* VCBPtr){
 	directoryEntry* var = createDir("var", 0, home);
 	directoryEntry* this = createDir("this", 0, var);
 	directoryEntry* that = createDir("that", 0, this);
-	fs_mkdir(pathToParse, S_IRWXU);
 	//parsePath(cwd, root, pathToParse, info);
 	//printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
+	LBAwrite(root, DIR_ENTRY_BLOCKS, startingBlock);
 	VCBPtr->rootBlockNum = startingBlock; // setting rootBlockNum to beginning or root dir
 }
 

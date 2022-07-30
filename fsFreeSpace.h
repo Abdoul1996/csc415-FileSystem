@@ -12,3 +12,9 @@
 *
 *
 **************************************************************/
+
+int initFreeSpace();
+int increaseSpace();
+int freeSpaceRequest(int numBlocks);
+int freeSpaceSearch();
+int releaseSpace(int entryLocation, int numBlocks);
