@@ -91,19 +91,12 @@ b_io_fd b_open (char * filename, int flags)
 	parsedInfo* info = malloc(sizeof(parsedInfo));
 	parsePath(cwd, root, pathToParse, info);
 
-	i
-	// Parse path
-	// if last element is not found Use flags to check O_WRONLY, O_RDONLY, O_RDWR, TRUNC, CRBATE
-	
-	// Check flags
-	// Check Validity
-	// Check existence
-	// Create if needed
-	//	- ptr DirectEntry = CreateFile(parent Dir)
-
-	//*** TODO ***:  Modify to save or set any information needed
-	//
-	//
+	if (info->lastElementIndex <= 0 | flags <= 0){
+		printf("Error: Parse path failed. Check line 95. b_io.c");
+		return (-1);
+	} else {
+		
+	}
 		
 	if (startup == 0) b_init();  //Initialize our system
 	buf = malloc(B_CHUNK_SIZE);
