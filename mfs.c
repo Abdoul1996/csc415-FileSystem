@@ -31,7 +31,8 @@ int fs_mkdir(const char *pathname, mode_t mode){
 	if(info->lastElementIndex >= 0)
 		return (-2);
 	directoryEntry* newDir = createDir(info->newEntryName, 0, info->parent);
-		
+	
+	printf("Created dir: %s\n", newDir->name);	
 	// TODO: free info
 	// TODO: Add WriteDir part	
 	writeDir(newDir);	
@@ -50,14 +51,13 @@ int fs_rmdir(const char *pathname){
 	strcpy(pathToParse, pathname);
 	parsedInfo* info = malloc(sizeof(parsedInfo));
 	parsePath(cwd, root, pathToParse, info);
-	
+	printf("IN RMDIR . . .\n lastElementindex: %d, isFile: %d\n", info->lastElementIndex, info->parent->entries[info->lastElementIndex]->isFile);	
 	if(info->lastElementIndex < 0)
 		return (-2);	// if last element doesn't exist, error
-	if(!info->parent->entries[info->lastElementIndex]->isFile)
+	if(info->parent->entries[info->lastElementIndex]->isFile)
 		return (-2);	// if last element is not a directory (0 = dir, 1 = file), error
 
 	directoryEntry* dirToDelete = info->parent->entries[info->lastElementIndex];
-	
 	// check if dirToDelete->entries is empty (only . and ..)
 	int itr = 1;
 	while(dirToDelete->entries[++itr] != NULL) // if dir is not empty, return error
