@@ -29,7 +29,7 @@
 
 typedef struct b_fcb
 	{
-	VCB * fi;
+	directoryEntry * fi;
 	int currLocation;
 	int blockRemainder;
 	int sizeRemainder;
