@@ -103,10 +103,10 @@ void initRootDirectory(VCB* VCBPtr){
 	cwd = root;
 	parsedInfo * info = malloc(sizeof(parsedInfo));
 	char pathToParse[NAME_LIMIT] = "/home/var/this/that";
-	directoryEntry* home = createDir("home", 0, root);
-	directoryEntry* var = createDir("var", 0, home);
-	directoryEntry* this = createDir("this", 0, var);
-	directoryEntry* that = createDir("that", 0, this);
+	//directoryEntry* home = createDir("home", 0, root);
+	//directoryEntry* var = createDir("var", 0, home);
+	//directoryEntry* this = createDir("this", 0, var);
+	//directoryEntry* that = createDir("that", 0, this);
 	//parsePath(cwd, root, pathToParse, info);
 	//printf("after parsePath: isFile: %d, isPathValid: %d, lastElementIndex: %d, parent name: %s\n", info->isFile, info->isPathValid, info->lastElementIndex, info->parent->name); 	
 	LBAwrite(root, DIR_ENTRY_BLOCKS, startingBlock);

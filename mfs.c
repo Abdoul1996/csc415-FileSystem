@@ -174,20 +174,19 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 	// idea here is to fill a dE struct with the data from disk that is
 	// being referred to in the args to this fn. we want to fill this de
 	// struct so we can access the data from the dir. the arg. asks for.
-	struct fs_diriteminfo* newInfo = malloc(sizeof(struct fs_diriteminfo));
+	fs_diriteminfo* newInfo = malloc(sizeof(fs_diriteminfo));
 
 	// printf("reclen= %hu\n", dirp->d_reclen);
 	// printf("dEP= %hu\n", dirp->dirEntryPosition);
 	// printf("dSL=%ld \n",dirp->directoryStartLocation);
 
 	// malloc buffer for LBAread
-	directoryEntry dirBuf[dirp->d_reclen * VCBPtr->blockSize];
+	directoryEntry* dirBuf = malloc(sizeof(directoryEntry));
 
 	//read the directory from the volume/disk
-	LBAread(&dirBuf, dirp->d_reclen, dirp->directoryStartLocation);
+	LBAread(dirBuf, dirp->d_reclen, dirp->directoryStartLocation);
 	// printf("readdir fetched: %s \n", dirBuf->name);
 
-	struct directoryEntry* dEntries = dirBuf->entries;
 	
 	//increment current dirEntry pos
 	dirp->dirEntryPosition += 1;
