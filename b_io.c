@@ -29,6 +29,7 @@
 
 typedef struct b_fcb
 	{
+		//TODO: Consolidate these
 	directoryEntry * fi;
 	int currLocation;
 	int blockRemainder;
