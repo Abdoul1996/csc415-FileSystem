@@ -173,19 +173,34 @@ int fs_isDir(char * path){
 
 }             //return 1 if directory, 0 otherwise
 struct fs_diriteminfo *fs_readdir(fdDir *dirp){
-	//takes fddir ptr
-	//print values from dirp
-	printf("reclen= %hu\n", dirp->d_reclen);
-	printf("dEP= %hu\n", dirp->dirEntryPosition);
-	printf("dSL=%ld \n",dirp->directoryStartLocation);
+	// idea here is to fill a dE struct with the data from disk that is
+	// being referred to in the args to this fn. we want to fill this de
+	// struct so we can access the data from the dir. the arg. asks for.
+	struct fs_diriteminfo newInfo;
 
-	// det. how to translate the values into the output format
+	// printf("reclen= %hu\n", dirp->d_reclen);
+	// printf("dEP= %hu\n", dirp->dirEntryPosition);
+	// printf("dSL=%ld \n",dirp->directoryStartLocation);
 
-	// take those steps
+	// malloc buffer for LBAread
+	directoryEntry dirBuf[dirp->d_reclen * VCBPtr->blockSize];
 
-	//returns firiteminfo struct.
+	//read the directory from the volume/disk
+	LBAread(&dirBuf, dirp->d_reclen, dirp->directoryStartLocation);
+	// printf("readdir fetched: %s \n", dirBuf->name);
 
+	struct directoryEntry* dEntries = dirBuf->entries;
 	
+	//increment current dirEntry pos
+	dirp->dirEntryPosition += 1;
+
+	// possible the left-hand side needs "newInfo->___" instead of "newInfo.___"
+	newInfo.d_reclen = dirp->d_reclen;
+	newInfo.fileType = dirBuf->entries[dirp->dirEntryPosition]->isFile;
+	newInfo.d_name = dirBuf->entries[dirp->dirEntryPosition]->name;
+	//strcpy(newInfo->d_name, dirBuf->entries[dirp->dirEntryPosition]->name);
+
+	return newInfo;
 }
 
 
