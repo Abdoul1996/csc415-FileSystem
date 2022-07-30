@@ -40,7 +40,15 @@ typedef u_int64_t uint64_t;
 typedef u_int32_t uint32_t;
 #endif
 
+typedef struct directoryEntry{
+        char name[NAME_LIMIT];
+        int size;
+        int location;
+        int isFile; // 0 = directory, 1 = file
+        time_t time;
+        struct directoryEntry ** entries;
 
+} directoryEntry;
 
 // This structure is returned by fs_readdir to provide the caller with information
 // about each file as it iterates through a directory
@@ -58,6 +66,7 @@ typedef struct fs_diriteminfo
 // calls the function readdir, you give the next entry in the directory
 typedef struct fdDir
 	{
+	directoryEntry* directory;
 	/*****TO DO:  Fill in this structure with what your open/read directory needs  *****/
 	unsigned short  d_reclen;		/*length of this record */
 	unsigned short	dirEntryPosition;	/*which directory entry position, like file pos */
@@ -104,15 +113,6 @@ typedef struct VCB{
 	long sig;		// "Magic Numbers"
 } VCB;
 
-typedef struct directoryEntry{
-	char name[NAME_LIMIT];
-	int size;
-	int location;
-	int isFile; // 0 = directory, 1 = file
-	time_t time;
-	struct directoryEntry ** entries;
-	
-} directoryEntry;
 
 directoryEntry* root; 
 directoryEntry* cwd; 

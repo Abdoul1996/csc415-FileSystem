@@ -26,7 +26,6 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
     directoryEntry * myCwd;
     char * token = strtok(pathToParse, "/");
 
-    printf("first: %s \n", token);
     
     info->isFile = -1;
     info->lastElementIndex = -1; 
@@ -41,7 +40,6 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
 	strcpy(prev, curr);
 	strcpy(curr, token);
 	token = strtok(NULL, "/");	    
-	printf("itr: %d, prev: %s, curr: %s, token: %s\n", i++, prev, curr, token);
 	    // if token is NOT Null
 	    // for each curr word, search in the myCwd's directoryEntries to see if it exists. 
 	    // If it does exist, change myCwd = myCwd->entries[index]. If it doesn't, error
@@ -70,7 +68,6 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
 			// next step: loop thru cwd->entries and see if curr exists
 			// if it does, get index, filetype(?) and return
 			// if it doesn't, lastElementIndex stays -1 to denote file not existing 
-			printf("cwd name: %s\n", myCwd->name);
 			
 			int itr = 1; // 0 = ., 1 = .., in loop will be entries[2]
 			while(myCwd->entries[++itr] != NULL){ // Finds curr in prev entries

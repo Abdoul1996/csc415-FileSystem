@@ -30,11 +30,12 @@ int fs_mkdir(const char *pathname, mode_t mode){
 		return (-2);
 	if(info->lastElementIndex >= 0)
 		return (-2);
-	directoryEntry* newDir = createDir(info->newEntryName, info->isFile, info->parent);
-	
+	directoryEntry* newDir = createDir(info->newEntryName, 0, info->parent);
+		
 	// TODO: free info
 	// TODO: Add WriteDir part	
-	
+	writeDir(newDir);	
+
 	return 0;
 }
 
@@ -95,9 +96,10 @@ fdDir * fs_opendir(const char *name){
 		fdDir* parsedInfo = malloc(sizeof(fdDir));
 
 		//TODO : still need to write loadDir
-		parsedInfo->d_reclen = loadDir(info->parent->entries[info->lastElementIndex]);
-		parsedInfo->directoryStartLocation = 0;
-		parsedInfo->dirEntryPosition = info->parent->entries[info->lastElementIndex]->size / sizeof(directoryEntry);
+		parsedInfo->directory = loadDir(info->parent->entries[info->lastElementIndex]);
+		parsedInfo->d_reclen = info->parent->size;
+		parsedInfo->directoryStartLocation = info->parent->location;
+		parsedInfo->dirEntryPosition = info->lastElementIndex;
 		return parsedInfo;
 	} else {
 		printf("Error opening Directory! Check line 31 or mfs.c");
@@ -124,7 +126,6 @@ char * fs_getcwd(char *buf, size_t size){
 	
 	// Copies the current working directory into the buffer
 	strcpy(buf, cwd->name);
-
 	// Returns the now copied buffer.
 	return buf;
 }
@@ -158,8 +159,6 @@ int fs_isFile(char * path){
 	strcpy(pathToParse, path);
 	parsedInfo* info = malloc(sizeof(parsedInfo));
 	parsePath(cwd, root, pathToParse, info);
-
-	printf("isFile returned: %d \n", info->isFile);
 
 	return info->isFile;
 

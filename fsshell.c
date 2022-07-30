@@ -36,15 +36,15 @@
 #define DIRMAX_LEN		4096
 
 /****   SET THESE TO 1 WHEN READY TO TEST THAT COMMAND ****/
-#define CMDLS_ON	1
+#define CMDLS_ON	0
 #define CMDCP_ON	0
 #define CMDMV_ON	0
-#define CMDMD_ON	0
-#define CMDRM_ON	0
+#define CMDMD_ON	1
+#define CMDRM_ON	1
 #define CMDCP2L_ON	0
 #define CMDCP2FS_ON	0
-#define CMDCD_ON	0
-#define CMDPWD_ON	0
+#define CMDCD_ON	1
+#define CMDPWD_ON	1
 #define CMDTOUCH_ON	0
 #define CMDCAT_ON	0
 
@@ -160,12 +160,10 @@ int cmd_ls (int argcnt, char *argvec[])
 #endif
 	fllong = 0;
 	flall = 0;
-
 	while (1)
 		{	
 		c = getopt_long(argcnt, argvec, "alh",
 				long_options, &option_index);
-				
 		if (c == -1)
 		   break;
 
@@ -196,6 +194,7 @@ int cmd_ls (int argcnt, char *argvec[])
 	
 	if (optind < argcnt)
 		{
+		printf("in ls trying fs_isDir");
 		//processing arguments after options
 		for (int k = optind; k < argcnt; k++)
 			{

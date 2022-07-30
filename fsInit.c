@@ -79,7 +79,12 @@ void initRootDirectory(VCB* VCBPtr){
 	for(int i = 0; i < NUM_ENTRIES ; i++){
                 root->entries[i] = NULL; // Null is free state  
         }
-
+	
+	strcpy(root->name, "/");
+	root->size = ENTRY_MEMORY;
+	root->location = startingBlock;
+	root->time = time( &rawTime);
+	root->isFile = 0;
 
 	// Initializing member variables of the struct for "." and ".." -> root directories
 	root->entries[0] = malloc(sizeof(directoryEntry));
