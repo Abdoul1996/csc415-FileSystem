@@ -21,6 +21,8 @@
 #include <fcntl.h>
 #include "b_io.h"
 #include "mfs.h"
+#include "fsFreeSpace.c"
+#include "parsePath.c"
 
 #define MAXFCBS 20
 #define B_CHUNK_SIZE 512
@@ -82,6 +84,13 @@ b_io_fd b_open (char * filename, int flags)
 	b_io_fd returnFd;
 	directoryEntry * fi;
 	char * buf;
+	
+	char pathToParse[NAME_LIMIT];
+	strcpy(pathToParse, filename);
+	parsedInfo* info = malloc(sizeof(parsedInfo));
+	parsePath(cwd, root, pathToParse, info);
+
+	i
 	// Parse path
 	// if last element is not found Use flags to check O_WRONLY, O_RDONLY, O_RDWR, TRUNC, CRBATE
 	
@@ -96,14 +105,21 @@ b_io_fd b_open (char * filename, int flags)
 	//
 		
 	if (startup == 0) b_init();  //Initialize our system
-	fi = 
+	buf = malloc(B_CHUNK_SIZE);
+	if(buf == NULL){
+		printf("Error: Malloc fail. Check line 100 in b_io.c");
+		return (-1);
+	}
 
 	
 	returnFd = b_getFCB();				// get our own file descriptor
 										// check for error - all used FCB's
+	fcbArray[returnFd].fi = fi;
 	fcbArray[returnFd].buf = buf;
-
-	
+	fcbArray[returnFd].index = 0;
+	fcbArray[returnFd].buflen = 0;
+	fcbArray[returnFd].currLocation = 0;
+	fcbArray[returnFd].blockRemainder = (fi->size + (B_CHUNK_SIZE -1)) / B_CHUNK_SIZE;
 	return (returnFd);						// all set
 	}
 
