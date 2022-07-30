@@ -174,7 +174,7 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 	// idea here is to fill a dE struct with the data from disk that is
 	// being referred to in the args to this fn. we want to fill this de
 	// struct so we can access the data from the dir. the arg. asks for.
-	struct fs_diriteminfo newInfo;
+	struct fs_diriteminfo* newInfo = malloc(sizeof(struct fs_diriteminfo));
 
 	// printf("reclen= %hu\n", dirp->d_reclen);
 	// printf("dEP= %hu\n", dirp->dirEntryPosition);
@@ -193,10 +193,10 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 	dirp->dirEntryPosition += 1;
 
 	// possible the left-hand side needs "newInfo->___" instead of "newInfo.___"
-	newInfo.d_reclen = dirp->d_reclen;
-	newInfo.fileType = dirBuf->entries[dirp->dirEntryPosition]->isFile;
-	newInfo.d_name = dirBuf->entries[dirp->dirEntryPosition]->name;
-	//strcpy(newInfo->d_name, dirBuf->entries[dirp->dirEntryPosition]->name);
+	newInfo->d_reclen = dirp->d_reclen;
+	newInfo->fileType = dirBuf->entries[dirp->dirEntryPosition]->isFile;
+	//newInfo->d_name = dirBuf->entries[dirp->dirEntryPosition]->name;
+	strcpy(newInfo->d_name, dirBuf->entries[dirp->dirEntryPosition]->name);
 
 	return newInfo;
 }
