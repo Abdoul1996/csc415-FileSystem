@@ -22,10 +22,10 @@
 #include <string.h>
 #include <math.h>
 #include "fsLow.h"
-#include "mfs.c"
-//#include "fsFreeSpace.c"
+#include "mfs.h"
+#include "fsFreeSpace.c"
 
-//#include "parsePath.c"
+#include "parsePath.h"
 
 #define DEBUG 1 // Allows debugging by skipping VCBPtr->sig == signature check
 

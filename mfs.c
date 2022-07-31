@@ -14,28 +14,22 @@
 
 #include "mfs.h"
 #include "parsePath.c"
-#include "fsFreeSpace.c"
-// Key directory functions
-//
-// void parsePath(directoryEntry* cwd, directoryEntry* root, char* pathToParse, parseInfo* info)
-
-// TODO: Figure out where cwd and root come from, will have to be changed later
+#include "fsFreeSpace.h"
 
 int fs_mkdir(const char *pathname, mode_t mode){
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, pathname);
-	parsedInfo* info = malloc(sizeof(parsedInfo));
-	parsePath(cwd, root, pathToParse, info);
-	if(info->isPathValid == 0)
+	parsedInfo* info = malloc(sizeof(parsedInfo));		// Allocating space for parsedInfo struct
+	parsePath(cwd, root, pathToParse, info);			// Loading data into parsedInfo struct
+	if(info->isPathValid == 0)							// Error check if path is not valid
 		return (-2);
-	if(info->lastElementIndex >= 0)
+	if(info->lastElementIndex >= 0)						// Error check if the last dir/file exists, then error since nothing to make
 		return (-2);
-	directoryEntry* newDir = createDir(info->newEntryName, 0, info->parent);
-	
+	printf("-MKDIR- parent: %s\n", info->parent->name);
+	directoryEntry* newDir = createDir(info->newEntryName, 0, info->parent);	// Creating a directory
 	printf("Created dir: %s\n", newDir->name);	
 	// TODO: free info
-	// TODO: Add WriteDir part	
-	writeDir(newDir);	
+	writeDir(newDir);	// Writing newly created directory to memory	
 
 	return 0;
 }
@@ -57,7 +51,7 @@ int fs_rmdir(const char *pathname){
 	if(info->parent->entries[info->lastElementIndex]->isFile)
 		return (-2);	// if last element is not a directory (0 = dir, 1 = file), error
 
-	directoryEntry* dirToDelete = info->parent->entries[info->lastElementIndex];
+	directoryEntry* dirToDelete = loadDir(info->parent->entries[info->lastElementIndex]);
 	// check if dirToDelete->entries is empty (only . and ..)
 	int itr = 1;
 	while(dirToDelete->entries[++itr] != NULL) // if dir is not empty, return error
@@ -78,7 +72,7 @@ int fs_delete(char* filename){
                 return (-2);    // if last element doesn't exist, error
         if(!info->parent->entries[info->lastElementIndex]->isFile)
                 return (-2);    // if last element is not a directory (0 = dir, 1 = file), error
-	return deleteEntry(info->parent, info->lastElementIndex);
+	return deleteEntry(info->parent, info->lastElementIndex);	// 0 = success
 
 }//removes a file
 
@@ -90,19 +84,19 @@ fdDir * fs_opendir(const char *name){
 	strcpy(pathToParse, name);
 	parsedInfo* info = malloc(sizeof(parsedInfo));
 	parsePath(cwd, root, pathToParse, info);
-
-	// Checking if the last element exists and is a directory.
+	
+	printf("-OPENDIR- parent name: %s LASTELEMENTINDEX: %d\n", info->parent->name, info->lastElementIndex);	
+	// TODO: Add if is directory condition
 	if(info->lastElementIndex > 0){
 		fdDir* parsedInfo = malloc(sizeof(fdDir));
 
-		//TODO : still need to write loadDir
 		parsedInfo->directory = loadDir(info->parent->entries[info->lastElementIndex]);
-		parsedInfo->d_reclen = info->parent->size;
+		parsedInfo->d_reclen = info->parent->size/sizeof(directoryEntry);
 		parsedInfo->directoryStartLocation = info->parent->location;
 		parsedInfo->dirEntryPosition = info->lastElementIndex;
 		return parsedInfo;
 	} else {
-		printf("Error opening Directory! Check line 31 or mfs.c");
+		printf("Error opening Directory! in mfs.c\n");
 		return -1;
 	}	
 }
@@ -110,7 +104,14 @@ fdDir * fs_opendir(const char *name){
 // Closes the directory
 int fs_closedir(fdDir *dirp){
 	printf("Closing Directory...");
-	
+	int itr = -1;
+	while(dirp->directory->entries[++itr] != NULL){
+		dirp->directory->entries[itr] = NULL;
+		free(dirp->directory->entries[itr]);
+	}
+	dirp->directory = NULL;
+	free(dirp->directory);
+	free(dirp);
 	// Free and NULL all mallocs
 		// info is from fs_mkdir
 	//free(info);
@@ -136,15 +137,17 @@ int fs_setcwd(char *buf){
 	strcpy(pathToParse, buf);
 	parsedInfo* info = malloc(sizeof(parsedInfo));
 	parsePath(cwd, root, pathToParse, info);
-
+	printf("-SETCWD- lastElementIndex: %d\n", info->lastElementIndex);
 	// Checking to see if the last element exists and is an element. 
 	if(info->lastElementIndex > 0){
 		// Gets the location of the parent
 		directoryEntry * cwdPtr = loadDir(info->parent->entries[info->lastElementIndex]);
 		// Allocates the cwd to the length of the buffer.
-		char * localCwd = malloc(strlen(buf));
+	//	char * localCwd = malloc(strlen(buf));
 		// Copies the cwd with the buffer.
-		strcpy(localCwd, buf);
+		//strcpy(localCwd, buf);
+		cwd = cwdPtr;
+		return 0;
 	} else {
 		// Error message
 		printf("Error in setcwd. Check line 128 of mfs.c");

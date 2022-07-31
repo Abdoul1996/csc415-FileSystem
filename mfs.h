@@ -1,7 +1,9 @@
 /**************************************************************
-* Class:  CSC-415
-* Name: Professor Bierman
-* Student ID: N/A
+* Class:  CSC-415-02 Fall 2021
+* Names: Abdoulfatah Abdillahi, Brandon Butler, Jacob Cross, Kevin Manago
+* Student IDs: 921623492, 920819091, 916168167, 917784912
+* GitHub Name: Abdoul1996, BrandonButler08, JacobCross, Kmanago95
+* Group Name: Team Shield
 * Project: Basic File System
 *
 * File: mfs.h
@@ -40,15 +42,18 @@ typedef u_int64_t uint64_t;
 typedef u_int32_t uint32_t;
 #endif
 
-typedef struct directoryEntry{
-        char name[NAME_LIMIT];
-        int size;
-        int location;
-        int isFile; // 0 = directory, 1 = file
-        time_t time;
-        struct directoryEntry ** entries;
+
+typedef struct directoryEntry{  // Our directoryEntry structure
+        char name[NAME_LIMIT];          // Name of file
+        int size;                                       // Size of file
+        int location;                           // Location of file
+        int isFile;                             // 0 = directory, 1 = file
+        time_t time;                            // Time created
+        struct directoryEntry ** entries; // TODO: Change to struct directoryEntry entries[number above]
 
 } directoryEntry;
+
+
 
 // This structure is returned by fs_readdir to provide the caller with information
 // about each file as it iterates through a directory
@@ -64,10 +69,10 @@ typedef struct fs_diriteminfo
 // from a directory.  This structure helps you (the file system) keep track of
 // which directory entry you are currently processing so that everytime the caller
 // calls the function readdir, you give the next entry in the directory
-typedef struct fdDir
+typedef struct
 	{
-	directoryEntry* directory;
 	/*****TO DO:  Fill in this structure with what your open/read directory needs  *****/
+	struct directoryEntry* directory;
 	unsigned short  d_reclen;		/*length of this record */
 	unsigned short	dirEntryPosition;	/*which directory entry position, like file pos */
 	uint64_t	directoryStartLocation;		/*Starting LBA of directory */
@@ -115,11 +120,11 @@ typedef struct VCB{
 
 
 directoryEntry* root; 
-directoryEntry* cwd; 
+directoryEntry* cwd; // Global variable used as the current working directory
 directoryEntry * createDir(char* name, int isFile, directoryEntry* parent); 
 int deleteEntry(directoryEntry* parent, int elementIndex);
-directoryEntry* loadDir(directoryEntry* parent);
 int writeDir(directoryEntry* entry);
+directoryEntry* loadDir(directoryEntry* parent);
 VCB *VCBPtr;
 
 #endif

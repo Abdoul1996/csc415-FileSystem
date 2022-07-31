@@ -25,8 +25,9 @@
 #include <getopt.h>
 #include <string.h>
 
+#include "b_io.h"
 #include "fsLow.h"
-#include "mfs.h"
+#include "mfs.c"
 
 #define PERMISSIONS (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
 
@@ -36,7 +37,7 @@
 #define DIRMAX_LEN		4096
 
 /****   SET THESE TO 1 WHEN READY TO TEST THAT COMMAND ****/
-#define CMDLS_ON	0
+#define CMDLS_ON	1
 #define CMDCP_ON	0
 #define CMDMV_ON	0
 #define CMDMD_ON	1
@@ -222,7 +223,11 @@ int cmd_ls (int argcnt, char *argvec[])
 		{
 		char * path = fs_getcwd(cwd, DIRMAX_LEN);	//get current working directory
 		fdDir * dirp;
-		dirp = fs_opendir (path);
+		printf("-CMD_LS- CWD: %s\n", path);
+		printf("-CMD_LS- CALLING OPENDIR . . .\n");
+		dirp = fs_opendir(path);
+		printf("-CMD_LS: PRINTING DIRP INFO . . .\n");
+		printf(" directory name: %s, reclen: %d, entryPosition: %d, startlocation: %ld\n", dirp->directory->name, dirp->d_reclen, dirp->dirEntryPosition, dirp->directoryStartLocation);
 		return (displayFiles (dirp, flall, fllong));
 		}
 #endif
@@ -269,6 +274,7 @@ int cmd_touch (int argcnt, char *argvec[])
 
 int cmd_cat (int argcnt, char *argvec[])
         {
+		printf("IN CAT . . .\n");
 #if (CMDCAT_ON == 1)     
         int testfs_src_fd;
         char * src;
@@ -278,6 +284,7 @@ int cmd_cat (int argcnt, char *argvec[])
         switch (argcnt)
                 {
                 case 2: //only one name provided
+			printf("IN SWITCH CASE 2 . . . \n");
                         src = argvec[1];
                         break;
 
@@ -286,7 +293,7 @@ int cmd_cat (int argcnt, char *argvec[])
                         return (-1);
                 }
 
-
+	printf("-CAT- GOING INTO B_OPEN . . .");
         testfs_src_fd = b_open (src, O_RDONLY);
 
         if (testfs_src_fd < 0)

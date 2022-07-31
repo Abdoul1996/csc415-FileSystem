@@ -21,8 +21,9 @@
 #include <fcntl.h>
 #include "b_io.h"
 #include "mfs.h"
-#include "fsFreeSpace.c"
-#include "parsePath.c"
+#include "fsFreeSpace.h"
+#include "parsePath.h"
+#include "fsLow.h"
 
 #define MAXFCBS 20
 #define B_CHUNK_SIZE 512
@@ -132,15 +133,15 @@ int b_seek (b_io_fd fd, off_t offset, int whence)
 	//check if whence is EOF - if yes set fcb index to 
 	if(whence==SEEK_END){
 		// set index to eof
-		fcbArray[fd]->index = fcbArray[fd]->buflen - 1;
+		fcbArray[fd].index = fcbArray[fd].buflen - 1;
 
 		// if SEEK_END, return length of buffer
-		return fcbArray[fd]->buflen;
+		return fcbArray[fd].buflen;
 	}
 	// change index of given fd to offset
-	fcbArray[fd]->index = offset;	
+	fcbArray[fd].index = offset;	
 		
-	return fcbArray[fd]->index;
+	return fcbArray[fd].index;
 	}
 
 
@@ -165,7 +166,7 @@ int b_write (b_io_fd fd, char * buffer, int count)
 	
 	// kevin's a2 main - modified
 	//const char* current;
-	char* blockbuf = malloc(BLOCK_SIZE);
+	char* blockBuf = malloc(B_CHUNK_SIZE);
 	int ctr = 0, buffctr = 0;
 
 	// stops when current = Null
@@ -178,32 +179,33 @@ int b_write (b_io_fd fd, char * buffer, int count)
 	while( ctr < count ){
 
 		//commit when buffer is full
-		if(buffctr == BLOCK_SIZE){
+		if(buffctr == B_CHUNK_SIZE){
 			// TODO
 			//commitBlock(blockbuf);
 			// ^ change to LBA_write
 			// need to determine position to write @, given fd 
-			LBAwrite(blockBuf, 1, )
+			LBAwrite(blockBuf, 1, fd);
 
 			buffctr = 0;
 		} else {
 			//set current buffer letter equal to current string letter,
 			//then increment the two counters
-			blockbuf[buffctr++] = buffer[ctr++];
+			blockBuf[buffctr++] = buffer[ctr++];
 		}	
 	}
 	// resetting ctr for the next string 
 	ctr = 0;
 	//}
 	//set remainder of buffer to null terminator
-	while(buffctr != BLOCK_SIZE)
-		blockbuf[buffctr++] = '\0';
+	while(buffctr != B_CHUNK_SIZE)
+		blockBuf[buffctr++] = '\0';
 	
 	//final commit of buffer
 
 	//TODO
 	//change to lba_Write
-	commitBlock(blockbuf);
+	//commitBlock(blockbuf);
+	LBAwrite(blockBuf, 1, fd);
 	
 		
 		

@@ -19,8 +19,9 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <mfs.h>
+#include "mfs.h"
 #include "fsFreeSpace.h"
+#include "fsLow.h"
 #define CHARSIZE 8 		// Number for the 8 bits in an unsigned char
 #define TOTAL_FREE_SPACE 2560 	// Free space bytes as denoted by MS1 steps
 #define FREE_SPACE_LIMIT CHARSIZE*TOTAL_FREE_SPACE
