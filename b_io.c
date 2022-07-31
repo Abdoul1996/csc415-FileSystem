@@ -95,9 +95,7 @@ b_io_fd b_open (char * filename, int flags)
 	if (info->lastElementIndex <= 0 | flags <= 0){
 		printf("Error: Parse path failed. Check line 95. b_io.c");
 		return (-1);
-	} else {
-		
-	}
+	}		
 		
 	if (startup == 0) b_init();  //Initialize our system
 	buf = malloc(B_CHUNK_SIZE);
