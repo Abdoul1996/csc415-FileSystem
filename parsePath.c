@@ -47,7 +47,7 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
     int i = 0;
     printf("initial token: %s", token);
     while(token != NULL){	
-	strcpy(prev, curr);							// This logic will make it so that prev, curr, and token have the
+	strcpy(prev, curr);						// This logic will make it so that prev, curr, and token have the
 	strcpy(curr, token);						// previous, current, and next entries.
 	token = strtok(NULL, "/");	    
 	    // if token is NOT Null -> case 1
@@ -75,7 +75,10 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
 		}
 		// Case 2
 		else if(token == NULL){ // NOTE: MyCwd == prev or the parent of "curr"
-			info->parent = myCwd;			
+			if(myCwd == NULL)	// if prev is null, that means curr did not move, assuming parent is the current directory
+				info->parent = root;
+			else
+				info->parent = myCwd;			
 			strcpy(info->newEntryName, curr);	// Setting newEntryName to current, possibly not necessary to do
 
 			info->isPathValid = 1; // at this process point, path is valid
