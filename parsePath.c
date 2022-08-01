@@ -37,15 +37,12 @@ void parsePath(directoryEntry * cwd, directoryEntry* root, char* pathToParse, pa
     
     info->isFile = -1;							// Setting isFile identifier to -1 initially, will always be set to 0/1 unless error
     info->lastElementIndex = -1; 				// Setting lastElIndex to -1 for error checking, will assign later
-	printf("IN PARSE PATH . . . \n");
-	printf("pathToParse: %s\n", pathToParse);
     if(pathToParse[0] == '/') 					// Loading root dir if first char is a / otherwise, using CWD.
 	    myCwd = root;
     else
 	    myCwd = cwd;
 	
     int i = 0;
-    printf("initial token: %s", token);
     while(token != NULL){	
 	strcpy(prev, curr);						// This logic will make it so that prev, curr, and token have the
 	strcpy(curr, token);						// previous, current, and next entries.
