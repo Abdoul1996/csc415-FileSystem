@@ -17,6 +17,7 @@
 #include "fsFreeSpace.h"
 
 int fs_mkdir(const char *pathname, mode_t mode){
+	printf("\n---Make Directory---\n");
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, pathname);
 	parsedInfo* info = malloc(sizeof(parsedInfo));		// Allocating space for parsedInfo struct
@@ -41,6 +42,7 @@ int fs_rmdir(const char *pathname){
 	// parent = this, and parent->entries[lastElementIndex] = that
 	// goal: remove "that" -> need to write remove directory
 
+	printf("\n---Remove Directory---\n");
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, pathname);
 	parsedInfo* info = malloc(sizeof(parsedInfo));
@@ -63,7 +65,8 @@ int fs_rmdir(const char *pathname){
 
 int fs_delete(char* filename){
 
- 	char pathToParse[NAME_LIMIT];
+ 	printf("\n---Deletey---\n");
+	 char pathToParse[NAME_LIMIT];
         strcpy(pathToParse, filename);
         parsedInfo* info = malloc(sizeof(parsedInfo));
         parsePath(cwd, root, pathToParse, info);
@@ -79,6 +82,7 @@ int fs_delete(char* filename){
 
 // Directory iteration functions
 fdDir * fs_opendir(const char *name){
+	printf("\n---Open Directory---\n");
 	// Parsing process
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, name);
@@ -87,7 +91,7 @@ fdDir * fs_opendir(const char *name){
 	
 	printf("-OPENDIR- parent name: %s LASTELEMENTINDEX: %d\n", info->parent->name, info->lastElementIndex);	
 	// TODO: Add if is directory condition
-	if(info->lastElementIndex > 0){
+	if(info->lastElementIndex != 0){
 		fdDir* parsedInfo = malloc(sizeof(fdDir));
 
 		parsedInfo->directory = loadDir(info->parent->entries[info->lastElementIndex]);
@@ -103,8 +107,7 @@ fdDir * fs_opendir(const char *name){
 
 // Closes the directory
 int fs_closedir(fdDir *dirp){
-	printf("Closing Directory...");
-	int itr = -1;
+	printf("\n---Close Directory---\n");	int itr = -1;
 	while(dirp->directory->entries[++itr] != NULL){
 		dirp->directory->entries[itr] = NULL;
 		free(dirp->directory->entries[itr]);
@@ -123,6 +126,7 @@ int fs_closedir(fdDir *dirp){
 
 // Misc directory functions
 char * fs_getcwd(char *buf, size_t size){
+	printf("\n---Get Curent Working Directory---\n");
 	// TODO: Put loop for errors
 	
 	// Copies the current working directory into the buffer
@@ -132,6 +136,7 @@ char * fs_getcwd(char *buf, size_t size){
 }
 
 int fs_setcwd(char *buf){
+	printf("\n---Set Current Working Directory---\n");
 	// Parse Path
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, buf);
@@ -143,10 +148,11 @@ int fs_setcwd(char *buf){
 		// Gets the location of the parent
 		directoryEntry * cwdPtr = loadDir(info->parent->entries[info->lastElementIndex]);
 		// Allocates the cwd to the length of the buffer.
-	//	char * localCwd = malloc(strlen(buf));
+		//char * localCwd = malloc(strlen(buf));
 		// Copies the cwd with the buffer.
 		//strcpy(localCwd, buf);
 		cwd = cwdPtr;
+		printf(cwd);
 		return 0;
 	} else {
 		// Error message
@@ -157,6 +163,7 @@ int fs_setcwd(char *buf){
 
 //linux chdir
 int fs_isFile(char * path){
+	printf("\n---Is File---\n");
 	//call parsepath, return the isFile field
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, path);
@@ -168,6 +175,7 @@ int fs_isFile(char * path){
 }     //return 1 if file, 0 otherwise
 
 int fs_isDir(char * path){
+	printf("\n---Is Directory---\n");
 	//call isFile, return opposite.
 	return !fs_isFile(path);
 
@@ -205,6 +213,7 @@ struct fs_diriteminfo *fs_readdir(fdDir *dirp){
 
 // TODO: error checks
 int fs_stat(const char *path, struct fs_stat *buf){
+	printf("\n---Stat---\n");
 	char pathToParse[NAME_LIMIT];
 	strcpy(pathToParse, path);
 	parsedInfo* info = malloc(sizeof(parsedInfo));

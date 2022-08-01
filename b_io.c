@@ -83,6 +83,7 @@ b_io_fd b_getFCB ()
 // O_RDONLY, O_WRONLY, or O_RDWR
 b_io_fd b_open (char * filename, int flags)
 	{
+	printf("\n---Buffer open---\n");
 	b_io_fd returnFd;
 	directoryEntry * fi;
 	char * buf;
@@ -120,6 +121,7 @@ b_io_fd b_open (char * filename, int flags)
 // Interface to seek function	
 int b_seek (b_io_fd fd, off_t offset, int whence)
 	{
+	printf("\n---Buffer seek---\n");
 	if (startup == 0) b_init();  //Initialize our system
 
 	// check that fd is between 0 and (MAXFCBS-1)
@@ -147,6 +149,7 @@ int b_seek (b_io_fd fd, off_t offset, int whence)
 // Interface to write function	
 int b_write (b_io_fd fd, char * buffer, int count)
 	{
+	printf("\n---Buffer write---\n");
 	if (startup == 0) b_init();  //Initialize our system
 
 	// check that fd is between 0 and (MAXFCBS-1)
@@ -233,6 +236,7 @@ int b_write (b_io_fd fd, char * buffer, int count)
 //  +-------------+------------------------------------------------+--------+
 int b_read (b_io_fd fd, char * buffer, int count)
 	{
+	printf("\n---Buffer read---\n");
 
 	if (startup == 0) b_init();  //Initialize our system
 
@@ -249,8 +253,7 @@ int b_read (b_io_fd fd, char * buffer, int count)
 	// Return value for function call, total bytes transferred
 	int bytesRead = 0;
 
-	// Offset used for when block is less than count input parameter, therefore needing to refill block
-	// and buffer needs a specific offset to write to correct part
+	// Used to offset the count input
 	int offset = 0;
 
 	// Processing data while count is > 0 -> more data to be read
@@ -274,17 +277,11 @@ int b_read (b_io_fd fd, char * buffer, int count)
 		if( fcbArray[fd].blockRemainder == 0 ){
 			LBAread(bufferArray[fd], 1, fcbArray[fd].currLocation++); // incrementing currLocation for next LBAread call
 			fcbArray[fd].sizeRemainder-=B_CHUNK_SIZE; 		  // tracking remaining size of file after LBAread, <=0 when empty
-			// blockRemainder condition below to account for EOF: ex. if sizeRemainder above is 27:
-			// 27 - 512 = -485. -----> blockRemainder = -485 + 512 = 27
-			// when not in EOF, blockRemainder is B_CHUNK_SIZE
 			fcbArray[fd].blockRemainder = (fcbArray[fd].sizeRemainder >= 0) ? B_CHUNK_SIZE : fcbArray[fd].sizeRemainder + B_CHUNK_SIZE;
 			// offset used to track current location in block for duration of function call
 			blockRemainderOffset = fcbArray[fd].blockRemainder;
 		}
-		// processing portion of the function call
-		// checks if blockRemainder >= count 
-		// if true,  condition (1) full count can be transferred and exit while loop
-		// if false, condition (2) remainder of block is transferred, and block will be refreshed with LBAread until condition is true
+		// Full count can be transferred and exit while loop
 		if(fcbArray[fd].blockRemainder >= count){ // condition (1)
 			// memcpy used to transfer data from my buffer to caller's buffer with their offsets
 			// transferring over count bytes due to condition (1)
@@ -293,9 +290,8 @@ int b_read (b_io_fd fd, char * buffer, int count)
 			bytesRead+=count;			// increasing bytesRead    since count data has been transferred	
 			fcbArray[fd].bytesRead+=count;		// increasing accumulated bytesRead for debugging
 			count = 0;				// setting count to 0 since all requested data is transferred
-		} else { //condition (2)
-			// transferring data from buffer to caller's buffer with offsets
-			// transferring over by blockRemainder because of condition (2)
+		} else {
+			// Remainder of block is transferred, and block will be refreshed with LBAread until condition is true
 			memcpy(buffer + offset, bufferArray[fd] + (blockRemainderOffset - fcbArray[fd].blockRemainder), fcbArray[fd].blockRemainder);
 			count-=fcbArray[fd].blockRemainder; 	// reducing count by blockRemainder to keep track of data transferred
 			offset+=fcbArray[fd].blockRemainder;	// increasing offset for buffer to keep track of current location in buffer
@@ -310,9 +306,11 @@ int b_read (b_io_fd fd, char * buffer, int count)
 // Interface to Close the file	
 int b_close (b_io_fd fd)
 	{
-		printf("Closing...\n");
-		b_fcb* fcb = &fcbArray[fd];
+		printf("\n---Buffer close---\n");
 
+		b_fcb* fcb = &fcbArray[fd];
+		
+		return 1;
 		// Whatever function is opened in b_open
 		//close(fcb->);
 	}
